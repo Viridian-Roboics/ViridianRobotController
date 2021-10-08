@@ -1,9 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
+import static com.arcrobotics.ftclib.util.MathUtils.clamp;
+
 import com.arcrobotics.ftclib.util.InterpLUT;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.Gamepad;
 
 @TeleOp(name="F0teleopSteering")
 
@@ -30,7 +31,14 @@ public class F0teleopSteering extends OpMode {
         double accel = maxP*(gamepad1.right_trigger - gamepad1.left_trigger);
         double turn  = gamepad1.left_stick_x;
 
-        double rp = accel*(1 - 0.6*turn), lp = accel*(1 + 0.6*turn);
+        double rp, lp;
+        if(gamepad1.a) {
+            rp = 2*accel;
+            lp = 2*accel;
+        } else {
+            rp = clamp(accel*(1 - 0.6*turn), -1, 1);
+            lp = clamp(accel*(1 + 0.6*turn), -1, 1);
+        }
 
         telemetry.addData("lp", lp);
         telemetry.addData("rp", rp);
@@ -54,6 +62,7 @@ public class F0teleopSteering extends OpMode {
 
         telemetry.update();
     }
+
 
     public void stop() {
         f.left.setPower(0);

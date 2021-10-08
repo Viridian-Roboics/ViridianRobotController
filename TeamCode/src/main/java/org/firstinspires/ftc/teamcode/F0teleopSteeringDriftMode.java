@@ -3,11 +3,10 @@ package org.firstinspires.ftc.teamcode;
 import com.arcrobotics.ftclib.util.InterpLUT;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.Gamepad;
 
-@TeleOp(name="F0teleopSteering")
+@TeleOp(name="F0teleopSteeringDriftMode")
 
-public class F0teleopSteering extends OpMode {
+public class F0teleopSteeringDriftMode extends OpMode {
     F0HardwareSteering f = new F0HardwareSteering();
 
     double maxP = 1;

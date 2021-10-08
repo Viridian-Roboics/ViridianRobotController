@@ -22,7 +22,7 @@ public class F0Hardware {
         right.setPwmEnable();
 
         left.setDirection(DcMotorSimple.Direction.FORWARD);
-        right.setDirection(DcMotorSimple.Direction.REVERSE);
+        right.setDirection(DcMotorSimple.Direction.FORWARD);
 
         left.setPower(0);
         right.setPower(0);

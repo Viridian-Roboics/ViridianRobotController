@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.arcrobotics.ftclib.util.InterpLUT;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.Gamepad;
 
 @TeleOp(name="F0teleopSteering")
 
@@ -10,7 +11,6 @@ public class F0teleopSteering extends OpMode {
     F0HardwareSteering f = new F0HardwareSteering();
 
     double maxP = 0.5;
-
 
     @Override
     public void init() {
@@ -30,14 +30,19 @@ public class F0teleopSteering extends OpMode {
         double accel = maxP*(gamepad1.right_trigger - gamepad1.left_trigger);
         double turn  = gamepad1.left_stick_x;
 
-        f.right.setPower(accel*(1 - turn));
-        f.left.setPower(accel*(1+turn));
+        double rp = accel*(1 - 0.3*turn), lp = accel*(1 + 0.3*turn);
+
+        telemetry.addData("lp", lp);
+        telemetry.addData("rp", rp);
+
+        f.right.setPower(lp);
+        f.left.setPower(rp);
 
         // Steering
         InterpLUT servoPosition = new InterpLUT();
-        servoPosition.add(-1,-10);
+        servoPosition.add(-1.01,-2);
         servoPosition.add(0,0);
-        servoPosition.add(1, 10);
+        servoPosition.add(1.01, 2);
         servoPosition.createLUT();
         double tAng = servoPosition.get(turn);
         f.steer.turnToAngle(tAng);

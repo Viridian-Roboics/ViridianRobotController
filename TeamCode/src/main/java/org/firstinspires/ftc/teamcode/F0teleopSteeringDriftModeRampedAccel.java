@@ -1,20 +1,23 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.arcrobotics.ftclib.util.*;
-
 import com.arcrobotics.ftclib.util.InterpLUT;
+import com.arcrobotics.ftclib.util.MathUtils;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp(name="F0teleopSteeringDriftMode")
+@TeleOp(name="F0teleopSteeringDriftModeRampedAccel")
 
-public class F0teleopSteeringDriftMode extends OpMode {
+public class F0teleopSteeringDriftModeRampedAccel extends OpMode {
     F0HardwareSteeringWithGyro f = new F0HardwareSteeringWithGyro();
 
     double maxP = 1;
     double turnCorrK = 0.03;
+    double accel;
 
-    boolean gyroReset = false;
+    boolean gyroReset = false, ramping = false;
+
+    ElapsedTime t = new ElapsedTime();
 
     @Override
     public void init() {
@@ -31,8 +34,24 @@ public class F0teleopSteeringDriftMode extends OpMode {
         }
         telemetry.addData("maxP", maxP);
 
-        double accel = maxP*(gamepad1.right_trigger - gamepad1.left_trigger);
+        double newAccel = maxP*(gamepad1.right_trigger - gamepad1.left_trigger);
         double turn  = gamepad1.left_stick_x;
+
+        if(newAccel - accel > 0.05) {
+            if(!ramping) {
+                ramping = true;
+                t.reset();
+            }
+            if(t.milliseconds() > 2) {
+                accel += 0.02;
+            }
+
+        } else {
+            accel = newAccel;
+            if(ramping) {
+                ramping = false;
+            }
+        }
 
         double rp, lp;
 

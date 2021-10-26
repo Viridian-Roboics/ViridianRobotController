@@ -14,8 +14,8 @@ public class F0teleopv2 extends OpMode {
     double[] maxP = new double[] {.125, .25, .5, .75, .9};
     int powerIndex = 0;
     String[] powerSetting = new String[] {"Cruise", "Normal", "Sport", "Super Sport", "Overdrive"};
-    boolean wasPressedLeft = false;
-    boolean wasPressedRight = false;
+    boolean wasPressedLeft = true;
+    boolean wasPressedRight = true;
 
     double turnCorrK = 0.03;
     double accel;
@@ -36,11 +36,17 @@ public class F0teleopv2 extends OpMode {
     public void loop() {
 
         // Get max power
+
         if(!(gamepad1.dpad_left == wasPressedLeft) && gamepad1.dpad_left && maxP[powerIndex] > 0.05) {
             powerIndex--;
         } else if(!(gamepad1.dpad_right == wasPressedRight) && gamepad1.dpad_right && maxP[powerIndex] < 1) {
             powerIndex++;
         }
+        if ((powerIndex > 4) || (powerIndex < 0)){
+            powerIndex = 0;
+        }
+        wasPressedLeft = gamepad1.dpad_left;
+        wasPressedRight = gamepad1.dpad_right;
         telemetry.addData("Power Setting", powerSetting[powerIndex]);
 
         double accel = maxP[powerIndex]*(gamepad1.right_trigger - gamepad1.left_trigger);
@@ -89,11 +95,8 @@ public class F0teleopv2 extends OpMode {
         telemetry.addData("Servo angle", Math.round(tAng*100)/100);
         telemetry.addData("Trim Value", Math.round(turnTrim*100)/100);
         telemetry.update();
-        if (powerIndex > 4) {
-            powerIndex = 0;
-        }
-        wasPressedLeft = gamepad1.dpad_left;
-        wasPressedRight = gamepad1.dpad_right;
+
+
     }
 
     public void stop() {

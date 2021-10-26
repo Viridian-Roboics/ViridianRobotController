@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @TeleOp(name="F0teleopSteering")
 
-public class F0teleopSteering extends OpMode {
+public class F0Cruise extends OpMode {
     F0HardwareSteering f = new F0HardwareSteering();
 
     double maxP = 1;
@@ -35,7 +35,7 @@ public class F0teleopSteering extends OpMode {
 
         if (gamepad1.x && !isXPressed)
             turnTrim++;
-            isXPressed = true;
+        isXPressed = true;
 
         if (!gamepad1.y)
             isYPressed = false;
@@ -52,8 +52,8 @@ public class F0teleopSteering extends OpMode {
             rp = 2*accel;
             lp = 2*accel;
         } else {
-            rp = clamp(accel*(1 - 0.6*turn), -1, 1);
-            lp = clamp(accel*(1 + 0.6*turn), -1, 1);
+            rp = clamp(accel*(1 - 0.6*turn), -1, 1)/5;
+            lp = clamp(accel*(1 + 0.6*turn), -1, 1)/5;
         }
 
         telemetry.addData("lp", lp);

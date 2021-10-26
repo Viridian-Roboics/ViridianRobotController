@@ -36,6 +36,13 @@ public class F0teleopSteeringDriftModeRampedAccel extends OpMode {
 
         double newAccel = maxP*(gamepad1.right_trigger - gamepad1.left_trigger);
         double turn  = gamepad1.left_stick_x;
+        int turnTrim = 0;
+
+        if (gamepad1.x)
+            turnTrim++;
+
+        if (gamepad1.y)
+            turnTrim--;
 
         if(newAccel - accel > 0.05) {
             if(!ramping) {
@@ -90,9 +97,9 @@ public class F0teleopSteeringDriftModeRampedAccel extends OpMode {
         speedCorrection.add(1.01, 0.5);
         speedCorrection.createLUT();
         double tAng = servoPosition.get(turn)*speedCorrection.get(Math.abs(accel));
-        f.steer.turnToAngle(tAng);
+        f.steer.turnToAngle(tAng+(double)turnTrim);
         telemetry.addData("Servo angle", tAng);
-
+        telemetry.addData("Trim Value", turnTrim);
         telemetry.update();
     }
 

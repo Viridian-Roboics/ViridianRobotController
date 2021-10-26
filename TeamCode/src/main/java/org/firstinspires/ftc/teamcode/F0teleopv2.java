@@ -6,12 +6,17 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp(name="your mom's straight and your dad's well and alive")
+@TeleOp(name="F0 Drive Software V2.0")
 
 public class F0teleopv2 extends OpMode {
     F0HardwareSteeringWithGyro f = new F0HardwareSteeringWithGyro();
 
-    double maxP = 1;
+    double[] maxP = new double[] {.125, .25, .5, .75, 1};
+    int powerIndex = 0;
+    String[] powerSetting = new String[] {"Cruise", "Normal", "Sport", "Super Sport", "Formula Mode"};
+    boolean wasPressedLeft = false;
+    boolean wasPressedRight = false;
+
     double turnCorrK = 0.03;
     double accel;
 
@@ -29,17 +34,17 @@ public class F0teleopv2 extends OpMode {
 
     @Override
     public void loop() {
+
         // Get max power
-        if(gamepad1.dpad_left && maxP > 0.05) {
-            maxP -= 0.002;
-        } else if(gamepad1.dpad_right && maxP < 1) {
-            maxP += 0.002;
+        if(!(gamepad1.dpad_left == wasPressedLeft) && gamepad1.dpad_left && maxP[powerIndex] > 0.05) {
+            powerIndex--;
+        } else if(!(gamepad1.dpad_right == wasPressedRight) && gamepad1.dpad_right && maxP[powerIndex] < 1) {
+            powerIndex++;
         }
-        telemetry.addData("maxP", maxP);
+        telemetry.addData("Power Setting", powerSetting[powerIndex]);
 
-        double accel = maxP*(gamepad1.right_trigger - gamepad1.left_trigger);
+        double accel = maxP[powerIndex]*(gamepad1.right_trigger - gamepad1.left_trigger);
         double turn  = gamepad1.left_stick_x;
-
 
         double rp, lp;
         if(turn != 0) {
@@ -81,9 +86,14 @@ public class F0teleopv2 extends OpMode {
         speedCorrection.createLUT();
         double tAng = servoPosition.get(turn)*speedCorrection.get(Math.abs(accel));
         f.steer.turnToAngle(tAng+turnTrim);
-        telemetry.addData("Servo angle", tAng);
-        telemetry.addData("Trim Value", turnTrim);
+        telemetry.addData("Servo angle", Math.round(tAng*100)/100);
+        telemetry.addData("Trim Value", Math.round(turnTrim*100)/100);
         telemetry.update();
+        if (powerIndex > 4) {
+            powerIndex = 0;
+        }
+        wasPressedLeft = gamepad1.dpad_left;
+        wasPressedRight = gamepad1.dpad_right;
     }
 
     public void stop() {

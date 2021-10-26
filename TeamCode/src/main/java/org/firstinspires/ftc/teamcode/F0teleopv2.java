@@ -6,14 +6,14 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp(name="F0 Drive Software V2.0")
+@TeleOp(name="F0 Drive Software V2.1")
 
 public class F0teleopv2 extends OpMode {
     F0HardwareSteeringWithGyro f = new F0HardwareSteeringWithGyro();
 
-    double[] maxP = new double[] {.125, .25, .5, .75, 1};
+    double[] maxP = new double[] {.125, .25, .5, .75, .9};
     int powerIndex = 0;
-    String[] powerSetting = new String[] {"Cruise", "Normal", "Sport", "Super Sport", "Formula Mode"};
+    String[] powerSetting = new String[] {"Cruise", "Normal", "Sport", "Super Sport", "Overdrive"};
     boolean wasPressedLeft = false;
     boolean wasPressedRight = false;
 

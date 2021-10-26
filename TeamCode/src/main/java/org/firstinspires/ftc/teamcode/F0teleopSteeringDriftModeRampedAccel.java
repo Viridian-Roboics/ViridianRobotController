@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.opencv.core.Mat;
 
-@TeleOp(name="your mom's gay and your dad's dead")
+@TeleOp(name="F0 Drive Software V2.0")
 
 public class F0teleopSteeringDriftModeRampedAccel extends OpMode {
     F0HardwareSteeringWithGyro f = new F0HardwareSteeringWithGyro();

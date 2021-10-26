@@ -3,10 +3,12 @@ package org.firstinspires.ftc.teamcode;
 import static com.arcrobotics.ftclib.util.MathUtils.clamp;
 
 import com.arcrobotics.ftclib.util.InterpLUT;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @TeleOp(name="F0teleopSteering")
+@Disabled
 
 public class F0teleopSteering extends OpMode {
     F0HardwareSteering f = new F0HardwareSteering();

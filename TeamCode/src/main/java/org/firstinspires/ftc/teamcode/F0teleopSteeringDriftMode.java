@@ -3,10 +3,12 @@ package org.firstinspires.ftc.teamcode;
 import com.arcrobotics.ftclib.util.*;
 
 import com.arcrobotics.ftclib.util.InterpLUT;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @TeleOp(name="F0teleopSteeringDriftMode")
+@Disabled
 
 public class F0teleopSteeringDriftMode extends OpMode {
     F0HardwareSteeringWithGyro f = new F0HardwareSteeringWithGyro();

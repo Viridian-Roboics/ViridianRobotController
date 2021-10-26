@@ -3,15 +3,18 @@ package org.firstinspires.ftc.teamcode;
 import static com.arcrobotics.ftclib.util.MathUtils.clamp;
 
 import com.arcrobotics.ftclib.util.InterpLUT;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-@TeleOp(name="F0teleopSteering")
+@TeleOp(name="F0Cruise")
+@Disabled
 
 public class F0Cruise extends OpMode {
     F0HardwareSteering f = new F0HardwareSteering();
 
     double maxP = 1;
+    double turnTrim = 0;
 
     @Override
     public void init() {
@@ -20,7 +23,7 @@ public class F0Cruise extends OpMode {
 
     @Override
     public void loop() {
-        int turnTrim = 0;
+
         boolean isXPressed = false;
         boolean isYPressed = false;
         // Get max power
@@ -30,19 +33,8 @@ public class F0Cruise extends OpMode {
             maxP += 0.01;
         }
         telemetry.addData("maxP", maxP);
-        if (!gamepad1.x)
-            isXPressed = false;
 
-        if (gamepad1.x && !isXPressed)
-            turnTrim++;
-        isXPressed = true;
 
-        if (!gamepad1.y)
-            isYPressed = false;
-
-        if (gamepad1.y && isYPressed)
-            turnTrim--;
-        isYPressed = true;
 
         double accel = maxP*(gamepad1.right_trigger - gamepad1.left_trigger);
         double turn  = gamepad1.left_stick_x;

@@ -2,16 +2,13 @@ package org.firstinspires.ftc.teamcode;
 
 import com.arcrobotics.ftclib.util.InterpLUT;
 import com.arcrobotics.ftclib.util.MathUtils;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.opencv.core.Mat;
+@TeleOp(name="your mom's straight and your dad's well and alive")
 
-@TeleOp(name="your mom's gay and your dad's dead")
-
-public class F0teleopSteeringDriftModeRampedAccel extends OpMode {
+public class F0teleopv2 extends OpMode {
     F0HardwareSteeringWithGyro f = new F0HardwareSteeringWithGyro();
 
     double maxP = 1;
@@ -19,6 +16,7 @@ public class F0teleopSteeringDriftModeRampedAccel extends OpMode {
     double accel;
 
     double turnTrim = 0;
+    double lastHeading = 0;
 
     boolean gyroReset = false, ramping = false;
 
@@ -44,26 +42,19 @@ public class F0teleopSteeringDriftModeRampedAccel extends OpMode {
 
 
         double rp, lp;
-        /*
         if(turn != 0) {
             gyroReset = false;
-            rp = accel*(1 - 0.6*turn);
-            lp = accel*(1 + 0.6*turn);
         } else {
             if(!gyroReset) {
-                f.imu.reset();
+                lastHeading = f.imu.getHeading();
                 gyroReset = true;
-                rp = accel*(1 - 0.6*turn);
-                lp = accel*(1 + 0.6*turn);
             } else {
-                double corr = f.imu.getHeading()*turnCorrK;
-                rp = accel*(1 - 0.6*turn + corr);
-                lp = accel*(1 + 0.6*turn - corr);
+                double corr = (f.imu.getHeading()-lastHeading)*turnCorrK;
+                turn = MathUtils.clamp(turn+corr,-1,1);
             }
         }
-        */
-        rp = accel*(1 - 0.6*turn);
-        lp = accel*(1 + 0.6*turn);
+        rp = accel*(1 - 0.7*turn);
+        lp = accel*(1 + 0.7*turn);
 
         telemetry.addData("lp", lp);
         telemetry.addData("rp", rp);

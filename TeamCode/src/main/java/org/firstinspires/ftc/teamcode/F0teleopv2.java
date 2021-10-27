@@ -14,10 +14,11 @@ public class F0teleopv2 extends OpMode {
     double[] maxP = new double[] {.125, .25, .5, .75, .9};
     int powerIndex = 0;
     String[] powerSetting = new String[] {"Cruise", "Normal", "Sport", "Super Sport", "Overdrive"};
+
     boolean wasPressedLeft = true;
     boolean wasPressedRight = true;
 
-    double turnCorrK = 0.03;
+    double turnCorrK = 0.0175;
     double accel;
 
     double turnTrim = 0;
@@ -37,43 +38,55 @@ public class F0teleopv2 extends OpMode {
 
         // Get max power
 
-        if(!(gamepad1.dpad_left == wasPressedLeft) && gamepad1.dpad_left && maxP[powerIndex] > 0.05) {
+        if (!(gamepad1.dpad_left == wasPressedLeft) && gamepad1.dpad_left && maxP[powerIndex] > 0.05) {
             powerIndex--;
-        } else if(!(gamepad1.dpad_right == wasPressedRight) && gamepad1.dpad_right && maxP[powerIndex] < 1) {
+        } else if (!(gamepad1.dpad_right == wasPressedRight) && gamepad1.dpad_right && maxP[powerIndex] < 1) {
             powerIndex++;
         }
-        if ((powerIndex > 4) || (powerIndex < 0)){
+        if ((powerIndex > 4)) {
+            powerIndex = 4;
+        } else if (powerIndex < 0) {
             powerIndex = 0;
         }
+
         wasPressedLeft = gamepad1.dpad_left;
         wasPressedRight = gamepad1.dpad_right;
+
         telemetry.addData("Power Setting", powerSetting[powerIndex]);
 
-        double accel = maxP[powerIndex]*(gamepad1.right_trigger - gamepad1.left_trigger);
-        double turn  = gamepad1.left_stick_x;
+        double accel = maxP[powerIndex] * (gamepad1.right_trigger - gamepad1.left_trigger);
+        double turn = gamepad1.left_stick_x;
 
         double rp, lp;
-        if(turn != 0) {
+        if (turn != 0) {
             gyroReset = false;
         } else {
-            if(!gyroReset) {
+            if (!gyroReset) {
                 lastHeading = f.imu.getHeading();
                 gyroReset = true;
             } else {
-                double corr = (f.imu.getHeading()-lastHeading)*turnCorrK;
-                turn = MathUtils.clamp(turn+corr,-1,1);
+                double corr = (f.imu.getHeading() - lastHeading) * turnCorrK;
+                turn = MathUtils.clamp(turn + corr, -1, 1);
             }
         }
-        rp = accel*(1 - 0.7*turn);
-        lp = accel*(1 + 0.7*turn);
+        /*if (f.imu.getRevIMU().getVelocity().xVeloc > 0 && gamepad1.left_trigger > 0) {
+            rp = accel * (1 - 0.7 * turn);
+            lp = accel * (1 + 0.7 * turn);
+        } else {
+            rp = -0.05;
+            lp = -0.05;
+        }*/
 
-        telemetry.addData("lp", lp);
-        telemetry.addData("rp", rp);
+        rp = accel * (1 - 0.7 * turn);
+        lp = accel * (1 + 0.7 * turn);
+
+        telemetry.addData("Left Power %", Math.round(lp*100));
+        telemetry.addData("Right Power %", Math.round(rp*100));
 
         f.right.setPower(MathUtils.clamp(lp,-1,1));
         f.left.setPower(MathUtils.clamp(rp,-1,1));
 
-        // turntrim
+        //trim
         if(gamepad1.x) {
             turnTrim += 0.002;
         } else if(gamepad1.y) {
@@ -91,7 +104,7 @@ public class F0teleopv2 extends OpMode {
         speedCorrection.add(1.01, 0.2);
         speedCorrection.createLUT();
         double tAng = servoPosition.get(turn)*speedCorrection.get(Math.abs(accel));
-        f.steer.turnToAngle(tAng+turnTrim);
+        f.steer.turnToAngle((tAng+turnTrim));
         telemetry.addData("Servo angle", Math.round(tAng*100)/100);
         telemetry.addData("Trim Value", Math.round(turnTrim*100)/100);
         telemetry.update();

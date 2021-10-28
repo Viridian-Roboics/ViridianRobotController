@@ -52,6 +52,7 @@ public class F0teleopv2 extends OpMode {
         wasPressedLeft = gamepad1.dpad_left;
         wasPressedRight = gamepad1.dpad_right;
 
+        telemetry.addData("F0 Drive Console Version 2.1 Status", "OK");
         telemetry.addData("Power Setting", powerSetting[powerIndex]);
 
         double accel = maxP[powerIndex] * (gamepad1.right_trigger - gamepad1.left_trigger);
@@ -80,11 +81,16 @@ public class F0teleopv2 extends OpMode {
         rp = accel * (1 - 0.7 * turn);
         lp = accel * (1 + 0.7 * turn);
 
-        telemetry.addData("Left Power %", Math.round(lp*100));
-        telemetry.addData("Right Power %", Math.round(rp*100));
+        if(gamepad1.b) {
+            f.left.setPower(-0.05);
+            f.left.setPower(-0.05);
+            telemetry.addData("Throttle Status", "BRAKE ENGAGED");
+        } else {
+            f.left.setPower(MathUtils.clamp(rp,-1,1));
+            f.right.setPower(MathUtils.clamp(lp,-1,1));
+            telemetry.addData("Throttle Percentage", Math.round(lp*100));
+        }
 
-        f.right.setPower(MathUtils.clamp(lp,-1,1));
-        f.left.setPower(MathUtils.clamp(rp,-1,1));
 
         //trim
         if(gamepad1.x) {
@@ -105,8 +111,8 @@ public class F0teleopv2 extends OpMode {
         speedCorrection.createLUT();
         double tAng = servoPosition.get(turn)*speedCorrection.get(Math.abs(accel));
         f.steer.turnToAngle((tAng+turnTrim));
-        telemetry.addData("Servo angle", Math.round(tAng*100)/100);
-        telemetry.addData("Trim Value", Math.round(turnTrim*100)/100);
+        /*telemetry.addData("Servo angle", Math.round(tAng*100)/100);
+        telemetry.addData("Trim Value", Math.round(turnTrim*100)/100);*/
         telemetry.update();
 
 

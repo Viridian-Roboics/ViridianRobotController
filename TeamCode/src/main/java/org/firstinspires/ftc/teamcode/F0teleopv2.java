@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import static android.os.SystemClock.sleep;
+
 import com.arcrobotics.ftclib.util.InterpLUT;
 import com.arcrobotics.ftclib.util.MathUtils;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -17,14 +19,20 @@ public class F0teleopv2 extends OpMode {
 
     boolean wasPressedLeft = true;
     boolean wasPressedRight = true;
+    boolean wasPressedUp = true;
+    boolean wasPressedDown = true;
 
-    double turnCorrK = 0.0175;
+    double turnCorrK = 0.02; //turn correction magnitude: 0.01 - 0.04
+    double gyroDelay = 250; //delay before veer correction (ms)
+    double brakePower = -0.01;
     double accel;
 
     double turnTrim = 0;
     double lastHeading = 0;
 
-    boolean gyroReset = false, ramping = false;
+    boolean gyroReset = false, ramping = false, gyroWait = false;
+
+    ElapsedTime gyroRT = new ElapsedTime();
 
     ElapsedTime t = new ElapsedTime();
 
@@ -36,8 +44,7 @@ public class F0teleopv2 extends OpMode {
     @Override
     public void loop() {
 
-        // Get max power
-
+        //Power Settings
         if (!(gamepad1.dpad_left == wasPressedLeft) && gamepad1.dpad_left && maxP[powerIndex] > 0.05) {
             powerIndex--;
         } else if (!(gamepad1.dpad_right == wasPressedRight) && gamepad1.dpad_right && maxP[powerIndex] < 1) {
@@ -58,32 +65,35 @@ public class F0teleopv2 extends OpMode {
         double accel = maxP[powerIndex] * (gamepad1.right_trigger - gamepad1.left_trigger);
         double turn = gamepad1.left_stick_x;
 
-        double rp, lp;
         if (turn != 0) {
             gyroReset = false;
         } else {
-            if (!gyroReset) {
-                lastHeading = f.imu.getHeading();
-                gyroReset = true;
+            if (!gyroReset) { //checking for steering input
+                if(!gyroWait) {
+                    gyroWait = true;
+                    gyroRT.reset();
+                }
+                else if(gyroRT.milliseconds() > gyroDelay) { //gyro delay for correction after steering input
+                    gyroWait = false;
+                    lastHeading = f.imu.getHeading();
+                    gyroReset = true;
+                }
             } else {
                 double corr = (f.imu.getHeading() - lastHeading) * turnCorrK;
                 turn = MathUtils.clamp(turn + corr, -1, 1);
             }
         }
-        /*if (f.imu.getRevIMU().getVelocity().xVeloc > 0 && gamepad1.left_trigger > 0) {
-            rp = accel * (1 - 0.7 * turn);
-            lp = accel * (1 + 0.7 * turn);
-        } else {
-            rp = -0.05;
-            lp = -0.05;
-        }*/
 
+        double rp, lp;
+
+        //defining right and left motor powers
         rp = accel * (1 - 0.7 * turn);
         lp = accel * (1 + 0.7 * turn);
 
+        //motor power control
         if(gamepad1.b) {
-            f.left.setPower(-0.05);
-            f.left.setPower(-0.05);
+            f.left.setPower(brakePower);
+            f.left.setPower(brakePower);
             telemetry.addData("Throttle Status", "BRAKE ENGAGED");
         } else {
             f.left.setPower(MathUtils.clamp(rp,-1,1));
@@ -91,15 +101,23 @@ public class F0teleopv2 extends OpMode {
             telemetry.addData("Throttle Percentage", Math.round(lp*100));
         }
 
+        if (!(gamepad1.dpad_up == wasPressedUp) && gamepad1.dpad_up)
+            turnCorrK =+ 0.001;
+        else if (!(gamepad1.dpad_down == wasPressedDown) && gamepad1.dpad_down)
+            turnCorrK =- 0.001;
+        if (turnCorrK < 0)
+            turnCorrK = 0;
 
-        //trim
+        telemetry.addData("Correction Factor (Do not exceed 0.04)", (Math.round(turnCorrK*1000))/10);
+
+        //steering trim
         if(gamepad1.x) {
             turnTrim += 0.002;
         } else if(gamepad1.y) {
             turnTrim -= 0.002;
         }
 
-        // Steering
+        //Steering
         InterpLUT servoPosition = new InterpLUT();
         servoPosition.add(-1.01,-1);
         servoPosition.add(0,0);
@@ -111,11 +129,7 @@ public class F0teleopv2 extends OpMode {
         speedCorrection.createLUT();
         double tAng = servoPosition.get(turn)*speedCorrection.get(Math.abs(accel));
         f.steer.turnToAngle((tAng+turnTrim));
-        /*telemetry.addData("Servo angle", Math.round(tAng*100)/100);
-        telemetry.addData("Trim Value", Math.round(turnTrim*100)/100);*/
         telemetry.update();
-
-
     }
 
     public void stop() {

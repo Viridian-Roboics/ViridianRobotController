@@ -8,14 +8,14 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp(name="F0 Drive Software V2.1")
+@TeleOp(name="Drive Software")
 
 public class F0teleopv2 extends OpMode {
     F0HardwareSteeringWithGyro f = new F0HardwareSteeringWithGyro();
 
-    double[] maxP = new double[] {.125, .25, .5, .75, .9};
+    double[] maxP = new double[] {.1, .25, .5, .75, .9};
     int powerIndex = 0;
-    String[] powerSetting = new String[] {"Cruise", "Normal", "Sport", "Super Sport", "Overdrive"};
+    String[] powerSetting = new String[] {"Eco Mode", "Normal Mode", "Sport Mode", "Track Mode", "Zero Mode"};
 
     boolean wasPressedLeft = true;
     boolean wasPressedRight = true;
@@ -23,7 +23,7 @@ public class F0teleopv2 extends OpMode {
     boolean wasPressedDown = true;
 
     double turnCorrK = 0.018; //turn correction magnitude: 0.01 - 0.04
-    double gyroDelay = 250; //delay before veer correction (ms)
+    double gyroDelay = 100; //delay before veer correction (ms)
     double brakePower = -0.025;
     double accel;
 
@@ -39,6 +39,16 @@ public class F0teleopv2 extends OpMode {
     @Override
     public void init() {
         f.init(hardwareMap);
+
+        String status;
+        if (f.imu.getRevIMU().isGyroCalibrated())
+            status = "Calibrated";
+        else
+            status = "Calibration Error - Check Gyroscope";
+
+        telemetry.addData("F0 Drive Console Version 2.3.1 Status", status);
+        telemetry.addData("Credits", "Timmy Nadolsky and Christopher Dycus");
+        telemetry.update();
     }
 
     @Override
@@ -59,7 +69,6 @@ public class F0teleopv2 extends OpMode {
         wasPressedLeft = gamepad1.dpad_left;
         wasPressedRight = gamepad1.dpad_right;
 
-        telemetry.addData("F0 Drive Console Version 2.1 Status", "OK");
         telemetry.addData("Power Setting", powerSetting[powerIndex]);
 
         double accel = maxP[powerIndex] * (gamepad1.right_trigger - gamepad1.left_trigger);
@@ -95,23 +104,33 @@ public class F0teleopv2 extends OpMode {
             f.left.setPower(brakePower);
             f.left.setPower(brakePower);
             telemetry.addData("Throttle Status", "BRAKE ENGAGED");
+        } else if (gamepad1.a && powerIndex == 5){
+            accel = (gamepad1.right_trigger - gamepad1.left_trigger);
+            rp = accel * (1 - 0.7 * turn);
+            lp = accel * (1 + 0.7 * turn);
+            f.left.setPower(MathUtils.clamp(rp,-1,1));
+            f.right.setPower(MathUtils.clamp(lp,-1,1));
+            telemetry.addData("P2P Engaged", "Power Limiter Disabled");
         } else {
             f.left.setPower(MathUtils.clamp(rp,-1,1));
             f.right.setPower(MathUtils.clamp(lp,-1,1));
             telemetry.addData("Throttle Percentage", Math.round(lp*100));
         }
 
+        //turn correction adjustment control
         if (!(gamepad1.dpad_up == wasPressedUp) && gamepad1.dpad_up)
             turnCorrK =+ 0.001;
         else if (!(gamepad1.dpad_down == wasPressedDown) && gamepad1.dpad_down)
             turnCorrK =- 0.001;
-        if (turnCorrK < 0)
-            turnCorrK = 0;
+        if (turnCorrK < 0.01)
+            turnCorrK = 0.01;
+        else if (turnCorrK > 0.05)
+            turnCorrK = 0.05;
 
         wasPressedUp = gamepad1.dpad_up;
         wasPressedDown = gamepad1.dpad_down;
 
-        telemetry.addData("Correction Factor (Do not exceed 0.04)", turnCorrK);
+        telemetry.addData("AutoSteer Percentage", Math.round((turnCorrK-0.01)*100/0.04));
 
         //steering trim
         if(gamepad1.x) {

@@ -22,9 +22,9 @@ public class F0teleopv2 extends OpMode {
     boolean wasPressedUp = true;
     boolean wasPressedDown = true;
 
-    double turnCorrK = 0.02; //turn correction magnitude: 0.01 - 0.04
+    double turnCorrK = 0.018; //turn correction magnitude: 0.01 - 0.04
     double gyroDelay = 250; //delay before veer correction (ms)
-    double brakePower = -0.01;
+    double brakePower = -0.025;
     double accel;
 
     double turnTrim = 0;
@@ -108,7 +108,10 @@ public class F0teleopv2 extends OpMode {
         if (turnCorrK < 0)
             turnCorrK = 0;
 
-        telemetry.addData("Correction Factor (Do not exceed 0.04)", (Math.round(turnCorrK*1000))/10);
+        wasPressedUp = gamepad1.dpad_up;
+        wasPressedDown = gamepad1.dpad_down;
+
+        telemetry.addData("Correction Factor (Do not exceed 0.04)", turnCorrK);
 
         //steering trim
         if(gamepad1.x) {

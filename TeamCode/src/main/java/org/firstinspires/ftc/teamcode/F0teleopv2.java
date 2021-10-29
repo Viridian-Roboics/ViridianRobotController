@@ -110,7 +110,7 @@ public class F0teleopv2 extends OpMode {
             lp = accel * (1 + 0.7 * turn);
             f.left.setPower(MathUtils.clamp(rp,-1,1));
             f.right.setPower(MathUtils.clamp(lp,-1,1));
-            telemetry.addData("P2P Engaged", "Power Limiter Disabled");
+            telemetry.addData("Turbo Engaged", "Power Limiter Disabled");
         } else {
             f.left.setPower(MathUtils.clamp(rp,-1,1));
             f.right.setPower(MathUtils.clamp(lp,-1,1));
@@ -130,7 +130,7 @@ public class F0teleopv2 extends OpMode {
         wasPressedUp = gamepad1.dpad_up;
         wasPressedDown = gamepad1.dpad_down;
 
-        telemetry.addData("AutoSteer Percentage", Math.round((turnCorrK-0.01)*100/0.04));
+        telemetry.addData("Steering Gyro-Assist Percentage", Math.round((turnCorrK-0.01)*100/0.04));
 
         //steering trim
         if(gamepad1.x) {
@@ -151,6 +151,9 @@ public class F0teleopv2 extends OpMode {
         speedCorrection.createLUT();
         double tAng = servoPosition.get(turn)*speedCorrection.get(Math.abs(accel));
         f.steer.turnToAngle((tAng+turnTrim));
+
+        telemetry.addData("Top Speed Reached (mph)", (f.imu.getRevIMU().getVelocity().xVeloc)*2.2);
+
         telemetry.update();
     }
 

@@ -21,6 +21,7 @@ public class F0teleopv2 extends OpMode {
     boolean wasPressedRight = true;
     boolean wasPressedUp = true;
     boolean wasPressedDown = true;
+    boolean powerChanged = false;
 
     double turnCorrK = 0.018; //turn correction magnitude: 0.01 - 0.04
     double gyroDelay = 100; //delay before veer correction (ms)
@@ -57,8 +58,10 @@ public class F0teleopv2 extends OpMode {
         //Power Settings
         if (!(gamepad1.dpad_left == wasPressedLeft) && gamepad1.dpad_left && maxP[powerIndex] > 0.05) {
             powerIndex--;
+            powerChanged = true;
         } else if (!(gamepad1.dpad_right == wasPressedRight) && gamepad1.dpad_right && maxP[powerIndex] < 1) {
             powerIndex++;
+            powerChanged = true;
         }
         if ((powerIndex > 4)) {
             powerIndex = 4;
@@ -66,10 +69,47 @@ public class F0teleopv2 extends OpMode {
             powerIndex = 0;
         }
 
+        if(powerChanged) {
+            //correction adjustment based on power setting
+            switch (powerIndex) {
+                case 0:
+                    turnCorrK = 0.03;
+                    break;
+                case 1:
+                    turnCorrK = 0.025;
+                    break;
+                case 2:
+                    turnCorrK = 0.0225;
+                    break;
+                case 3:
+                    turnCorrK = 0.02;
+                    break;
+                default:
+                    turnCorrK = 0.018;
+                    break;
+            }
+            powerChanged = false;
+        }
+
+        telemetry.addData("Power Setting", powerSetting[powerIndex]);
+
         wasPressedLeft = gamepad1.dpad_left;
         wasPressedRight = gamepad1.dpad_right;
 
-        telemetry.addData("Power Setting", powerSetting[powerIndex]);
+        //turn correction adjustment control
+        if (!(gamepad1.dpad_up == wasPressedUp) && gamepad1.dpad_up)
+            turnCorrK =+ 0.001;
+        else if (!(gamepad1.dpad_down == wasPressedDown) && gamepad1.dpad_down)
+            turnCorrK =- 0.001;
+        if (turnCorrK < 0.01)
+            turnCorrK = 0.01;
+        else if (turnCorrK > 0.05)
+            turnCorrK = 0.05;
+
+        wasPressedUp = gamepad1.dpad_up;
+        wasPressedDown = gamepad1.dpad_down;
+
+        telemetry.addData("AutoSteer Percentage", Math.round((turnCorrK-0.01)*100/0.04));
 
         double accel = maxP[powerIndex] * (gamepad1.right_trigger - gamepad1.left_trigger);
         double turn = gamepad1.left_stick_x;
@@ -116,21 +156,6 @@ public class F0teleopv2 extends OpMode {
             f.right.setPower(MathUtils.clamp(lp,-1,1));
             telemetry.addData("Throttle Percentage", Math.round(lp*100));
         }
-
-        //turn correction adjustment control
-        if (!(gamepad1.dpad_up == wasPressedUp) && gamepad1.dpad_up)
-            turnCorrK =+ 0.001;
-        else if (!(gamepad1.dpad_down == wasPressedDown) && gamepad1.dpad_down)
-            turnCorrK =- 0.001;
-        if (turnCorrK < 0.01)
-            turnCorrK = 0.01;
-        else if (turnCorrK > 0.05)
-            turnCorrK = 0.05;
-
-        wasPressedUp = gamepad1.dpad_up;
-        wasPressedDown = gamepad1.dpad_down;
-
-        telemetry.addData("AutoSteer Percentage", Math.round((turnCorrK-0.01)*100/0.04));
 
         //steering trim
         if(gamepad1.x) {

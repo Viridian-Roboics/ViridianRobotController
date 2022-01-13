@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.CompBotW1;
 
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -18,6 +17,8 @@ public class CompBotW1Attachments extends CompBotW1 {
     public final static int liftSafeAdder = 0, liftMaxAdder = 1000;
     public int liftZero, liftSafe, liftMax;
     public final static double spinPower = 0.2;
+
+    public final static int lowLift = 0, medLift = 0, highLift = 0;
 
     private int liftHold;
     private boolean holding = false;
@@ -85,8 +86,17 @@ public class CompBotW1Attachments extends CompBotW1 {
     public void setLiftPower(double p) {
         lift.setPower(p);
     }
-    public void goLiftPosition(int ticksToDrive, double speed) {
+    public void moveLiftPosition(int ticksToDrive, double speed) {
         lift.setTargetPosition(lift.getCurrentPosition() + ticksToDrive);
+        lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        while(lift.isBusy()) {
+            lift.setPower(speed);
+        }
+        lift.setPower(0);
+        lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+    public void setLiftPosition(int pos, double speed) {
+        lift.setTargetPosition(pos);
         lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         while(lift.isBusy()) {
             lift.setPower(speed);
@@ -113,7 +123,7 @@ public class CompBotW1Attachments extends CompBotW1 {
         holding = false;
     }
     public void goLiftSafe() {
-        goLiftPosition(liftSafeAdder, 1);
+        moveLiftPosition(liftSafeAdder, 1);
     }
 
     public void setBucket(double position) {
@@ -126,14 +136,14 @@ public class CompBotW1Attachments extends CompBotW1 {
     public void ShareGoal(){
         if (getLiftPos() > 5000) {
             int dif = -1 * (getLiftPos() - 5000);
-            goLiftPosition(dif, -1);
+            moveLiftPosition(dif, -1);
         }
         else if (getLiftPos() < 5000) {
             int dif = getLiftPos() - 5000;
-            goLiftPosition(dif, 1);
+            moveLiftPosition(dif, 1);
         }
         setBucket(.5);
-        goLiftPosition(3300,1);
+        moveLiftPosition(3300,1);
         setBucket(.3);
     }
 
@@ -155,5 +165,18 @@ public class CompBotW1Attachments extends CompBotW1 {
         }
         spin0.setPower(0);
         spin1.setPower(0);
+    }
+
+    public void lowLift() {
+        setLiftPosition(liftZero+lowLift,0.5);
+    }
+    public void medLift() {
+        setLiftPosition(liftZero+medLift, 0.5);
+    }
+    public void highLift() {
+        setLiftPosition(liftZero+highLift, 0.5);
+    }
+    public void zeroLift() {
+        setLiftPosition(liftZero, 0.5);
     }
 }

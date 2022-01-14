@@ -15,10 +15,10 @@ public class MotorTest extends OpMode {
         bl = hardwareMap.get(DcMotor.class,"bl");
         br = hardwareMap.get(DcMotor.class,"br");
 
-        fl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        fr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        bl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        br.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        fl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        fr.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        bl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        br.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         fl.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         fr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -29,8 +29,8 @@ public class MotorTest extends OpMode {
     @Override
     public void loop() {
         fl.setPower(1);
-        fr.setPower(1);
-        bl.setPower(1);
+        fr.setPower(-1);
+        bl.setPower(-1);
         br.setPower(1);
 
         ElapsedTime dt = new ElapsedTime();

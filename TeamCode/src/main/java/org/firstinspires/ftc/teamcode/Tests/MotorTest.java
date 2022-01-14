@@ -67,5 +67,6 @@ public class MotorTest extends OpMode {
         newPos = br.getCurrentPosition();
         vel = (newPos - oldPos)/dt.milliseconds();
         telemetry.addLine("Speed of br motor: "+vel+" clicks/ms");
+        telemetry.update();
     }
 }

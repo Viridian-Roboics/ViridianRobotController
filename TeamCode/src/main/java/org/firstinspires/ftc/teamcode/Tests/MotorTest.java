@@ -28,15 +28,15 @@ public class MotorTest extends OpMode {
 
     @Override
     public void loop() {
-        fl.setPower(1);
+        //fl.setPower(1);
         fr.setPower(-1);
-        bl.setPower(-1);
-        br.setPower(1);
+       // bl.setPower(-1);
+        //br.setPower(1);
 
         ElapsedTime dt = new ElapsedTime();
         double oldPos, newPos;
 
-        oldPos = fl.getCurrentPosition();
+        /*oldPos = fl.getCurrentPosition();
         dt.reset();
         while(dt.milliseconds() < 10) {
 
@@ -45,6 +45,7 @@ public class MotorTest extends OpMode {
         double vel = (newPos - oldPos)/dt.milliseconds();
         telemetry.addLine("Speed of fl motor: "+vel+" clicks/ms");
 
+         */
 
         oldPos = fr.getCurrentPosition();
         dt.reset();
@@ -52,8 +53,10 @@ public class MotorTest extends OpMode {
 
         }
         newPos = fr.getCurrentPosition();
-        vel = (newPos - oldPos)/dt.milliseconds();
+        double vel = (newPos - oldPos)/dt.milliseconds();
         telemetry.addLine("Speed of fr motor: "+vel+" clicks/ms");
+
+        /*
 
         oldPos = bl.getCurrentPosition();
         dt.reset();
@@ -74,10 +77,12 @@ public class MotorTest extends OpMode {
         vel = (newPos - oldPos)/dt.milliseconds();
         telemetry.addLine("Speed of br motor: "+vel+" clicks/ms");
 
-        telemetry.addLine(String.valueOf(fl.getCurrentPosition()));
+
+         */
+        //telemetry.addLine(String.valueOf(fl.getCurrentPosition()));
         telemetry.addLine(String.valueOf(fr.getCurrentPosition()));
-        telemetry.addLine(String.valueOf(bl.getCurrentPosition()));
-        telemetry.addLine(String.valueOf(br.getCurrentPosition()));
+        //telemetry.addLine(String.valueOf(bl.getCurrentPosition()));
+        //telemetry.addLine(String.valueOf(br.getCurrentPosition()));
 
 
         telemetry.update();

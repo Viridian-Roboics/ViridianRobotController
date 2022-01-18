@@ -77,7 +77,7 @@ public class CompBotW1 {
             phoneCam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
             {
                 @Override
-                public void onOpened() { phoneCam.startStreaming(1280, 720, OpenCvCameraRotation.SIDEWAYS_LEFT); }
+                public void onOpened() { phoneCam.startStreaming(1280, 720, OpenCvCameraRotation.UPRIGHT); }
 
                 //@Override
                 public void onError(int errorCode) {}
@@ -223,6 +223,21 @@ public class CompBotW1 {
             fr.setPower(power);
             br.setPower(power);
         } while (Math.abs(error) > 0.01 && e.milliseconds() < time);
+    }
+    public void gyroTurnAbsolute(double turn, double sTurn) { // turn is degrees
+        useEncoders();
+        imu.reset();
+        double expectedHeading = turn, error;
+        while (expectedHeading > 180)  expectedHeading -= 360;
+        while (expectedHeading <= -180) expectedHeading += 360;
+        do {
+            error = -1*(imu.getHeading() - expectedHeading);
+            double power = (Math.abs(error) > 20) ? (Math.signum(error) * sTurn) : ((error / 20) * sTurn);
+            fl.setPower(power);
+            bl.setPower(power);
+            fr.setPower(power);
+            br.setPower(power);
+        } while (Math.abs(error) > 0.01);
     }
     public void gyroTurn(double turn, double sTurn, Telemetry telemetry) {
         useEncoders();

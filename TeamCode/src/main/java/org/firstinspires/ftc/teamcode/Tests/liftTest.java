@@ -51,7 +51,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
  */
 
 @TeleOp(name="liftTest")
-@TeleOp(name="Basic: Linear OpMode", group="Linear Opmode")
 @Disabled
 public class liftTest extends LinearOpMode {
 

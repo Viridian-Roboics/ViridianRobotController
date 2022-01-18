@@ -239,6 +239,22 @@ public class CompBotW1 {
             br.setPower(power);
         } while (Math.abs(error) > 0.01);
     }
+    public void gyroTurnAbsolute(double turn, double sTurn, long time) { // turn is degrees
+        useEncoders();
+        imu.reset();
+        double expectedHeading = turn, error;
+        while (expectedHeading > 180)  expectedHeading -= 360;
+        while (expectedHeading <= -180) expectedHeading += 360;
+        ElapsedTime e = new ElapsedTime();
+        do {
+            error = -1*(imu.getHeading() - expectedHeading);
+            double power = (Math.abs(error) > 20) ? (Math.signum(error) * sTurn) : ((error / 20) * sTurn);
+            fl.setPower(power);
+            bl.setPower(power);
+            fr.setPower(power);
+            br.setPower(power);
+        } while (Math.abs(error) > 0.01 && e.milliseconds() < time);
+    }
     public void gyroTurn(double turn, double sTurn, Telemetry telemetry) {
         useEncoders();
         imu.reset();

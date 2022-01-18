@@ -40,42 +40,39 @@ public class BlueNearAuton extends LinearOpMode {
         r.setBucket(1);
 
         // line up with drop
-        r.AEncDrive(0,30,0,dPower);
+        r.AEncDrive(0,27,0,dPower);
 
         if (Arrays.equals(pos, new boolean[]{true, false, false})) {// left
-            r.AEncDrive(20,0,dPower,0);
+            r.AEncDrive(14,0,dPower,0);
             r.lowLift();
-            r.setBucket(0);
+            //r.setBucket(0);
             sleep(2000);
-            r.setBucket(1);
+            //r.setBucket(1);
             r.zeroLift();
             r.AEncDrive(-14,0,-dPower,0);
         } else if (Arrays.equals(pos, new boolean[]{false, true, false})) {// middle
-            r.AEncDrive(16,0,dPower,0);
+            r.AEncDrive(6,0,dPower,0);
             r.medLift();
-            r.setBucket(0);
+            //r.setBucket(0);
             sleep(2000);
-            r.setBucket(1);
+            //r.setBucket(1);
             r.zeroLift();
-            r.AEncDrive(-10,0,-dPower,0);
+            r.AEncDrive(-6,0,-dPower,0);
         } else {// right
-            r.AEncDrive(10,0,dPower,0);
             r.highLift();
-            r.setBucket(0);
+            //r.setBucket(0);
             sleep(2000);
-            r.setBucket(1);
+            //r.setBucket(1);
             r.zeroLift();
-            r.AEncDrive(-4,0,-dPower,0);
         }
         telemetry.addLine("finished with lift");
         telemetry.update();
 
 
         // Strafe to warehouse
-        r.gyroTurn(90,0.2);
+        r.gyroTurn(90,0.2,5000);
         telemetry.addLine("finished with turn");
         telemetry.update();
-        r.AEncDrive(0,-10,0,-dPower, 3000);
         r.AEncDrive(0,-15,0,-0.15,3000);
         r.AEncDrive(100,0,1,0);
 

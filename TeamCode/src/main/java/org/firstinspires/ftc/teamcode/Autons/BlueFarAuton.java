@@ -41,46 +41,47 @@ public class BlueFarAuton extends LinearOpMode {
         double heading = r.imu.getHeading();
 
         // Strafe over
-        r.AEncDrive(0,22,0,0.2,3000);
+        r.AEncDrive(0,22,0,0.2,4000);
 
-        r.gyroTurnAbsolute(heading,0.2);
+        r.gyroTurnAbsolute(heading,0.2,2000);
 
         // Spin
         r.spin(2000);
 
         // Move over
         r.AEncDrive(0,-50,0,-dPower);
-        r.AEncDrive(6,0,0.15,0,1500);
+
+        r.gyroTurnAbsolute(heading,0.2,2000);
 
         //lift and drop
         if (Arrays.equals(pos, new boolean[]{true, false, false})) {// left
             r.AEncDrive(14,0,dPower,0);
             r.lowLift();
-            r.setBucket(0);
+            //r.setBucket(0);
             sleep(2000);
-            r.setBucket(1);
+            //r.setBucket(1);
             r.zeroLift();
             r.AEncDrive(-14,0,-dPower,0);
         } else if (Arrays.equals(pos, new boolean[]{false, true, false})) {// middle
             r.AEncDrive(6,0,dPower,0);
             r.medLift();
-            r.setBucket(0);
+            //r.setBucket(0);
             sleep(2000);
-            r.setBucket(1);
+            //r.setBucket(1);
             r.zeroLift();
             r.AEncDrive(-6,0,-dPower,0);
         } else {// right
             r.highLift();
-            r.setBucket(0);
+            //r.setBucket(0);
             sleep(2000);
-            r.setBucket(1);
+            //r.setBucket(1);
             r.zeroLift();
         }
         telemetry.addLine("finished with lift");
         telemetry.update();
 
         // Drive to depot
-        r.AEncDrive(30,54,0.4,1,5000);
+        r.AEncDrive(30.5,55.5,0.3,0.8,5000);
 
         r.stop();
 

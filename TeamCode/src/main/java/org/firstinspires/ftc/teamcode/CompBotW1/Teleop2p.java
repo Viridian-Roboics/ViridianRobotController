@@ -7,8 +7,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.CompBotV3.CompBotV3;
 
-@TeleOp(name="Viridian Competition Teleop, 1 Player")
-public class Teleop extends OpMode {
+@TeleOp(name="Viridian Competition Teleop, 2 Player")
+public class Teleop2p extends OpMode {
     CompBotW1Attachments r = new CompBotW1Attachments();
     double initialHeading, error;
     boolean headingReset = false;
@@ -22,7 +22,16 @@ public class Teleop extends OpMode {
 
     @Override
     public void loop() {
-        double y = gamepad1.left_stick_y, x = -1*gamepad1.left_stick_x, turn = -1*gamepad1.right_stick_x;
+        double y, x, turn;
+        if(Math.abs(gamepad2.left_stick_y) > 0 || Math.abs(gamepad2.left_stick_x) > 0 ||  Math.abs(gamepad2.right_stick_x) > 0) {
+            y = gamepad2.left_stick_y;
+            x = -1*gamepad2.left_stick_x;
+            turn = -1*gamepad2.right_stick_x;
+        } else {
+            y = gamepad1.left_stick_y;
+            x = -1*gamepad1.left_stick_x;
+            turn = -1*gamepad1.right_stick_x;
+        }
 
         // Deadzone
         y = (Math.abs(y)>0.05 ? y : 0);
@@ -30,9 +39,9 @@ public class Teleop extends OpMode {
         turn = (Math.abs(turn)>0.05 ? turn : 0);
 
         // Power adjust
-        y *= (gamepad1.right_bumper|| gamepad1.left_stick_button?0.4:1);
-        x *= (gamepad1.right_bumper|| gamepad1.left_stick_button?0.4:1);
-        turn *= (gamepad1.right_bumper|| gamepad1.left_stick_button?0.4:1);
+        y *= (gamepad2.right_bumper || gamepad1.left_stick_button || gamepad2.left_stick_button ?0.4:1);
+        x *= (gamepad2.right_bumper || gamepad1.left_stick_button || gamepad2.left_stick_button ?0.4:1);
+        turn *= (gamepad2.right_bumper|| gamepad1.left_stick_button || gamepad2.left_stick_button ?0.4:1);
 
         if(Math.abs(y) > Math.abs(x)) {
             x = 0;

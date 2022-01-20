@@ -14,7 +14,7 @@ public class CompBotW1Attachments extends CompBotW1 {
     public Servo bucket0, bucket1;
     public CRServo spin0, spin1;
 
-    public final static int liftSafeAdder = 0, liftMaxAdder = 10000;
+    public final static int liftSafeAdder = 4600, liftMaxAdder = 10000;
     public int liftZero, liftSafe, liftMax;
     public final static double spinPower = -1;
 
@@ -87,7 +87,7 @@ public class CompBotW1Attachments extends CompBotW1 {
         lift.setPower(p);
     }
     public void safeLiftDrive(double p) {
-        if((lift.getCurrentPosition() > liftZero + liftSafe && Math.signum(p) == 1) || (lift.getCurrentPosition() < liftZero && Math.signum(p) == -1)) {
+        if((lift.getCurrentPosition() > liftMax && Math.signum(p) == 1) || (lift.getCurrentPosition() < liftZero && Math.signum(p) == -1)) {
             lift.setPower(0);
         } else {
             lift.setPower(p);
@@ -129,11 +129,14 @@ public class CompBotW1Attachments extends CompBotW1 {
         }
         holding = false;
     }
-    public void goLiftSafe() {
-        moveLiftPosition(liftSafeAdder, 1);
-    }
 
     public void setBucket(double position) {
+        if(lift.getCurrentPosition() > liftSafe) {
+            bucket0.setPosition(position);
+            bucket1.setPosition(1-position);
+        }
+    }
+    public void setBucketOverride(double position) {
         bucket0.setPosition(position);
         bucket1.setPosition(1-position);
     }

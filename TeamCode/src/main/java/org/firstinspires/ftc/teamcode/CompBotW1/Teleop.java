@@ -61,10 +61,10 @@ public class Teleop extends OpMode {
 
         if(gamepad1.dpad_up) {
             r.stopPoweredHold();
-            r.setLiftPower(liftPower);
+            r.setLiftPower(-liftPower);
         } else if(gamepad1.dpad_down) {
             r.stopPoweredHold();
-            r.setLiftPower(-liftPower);
+            r.setLiftPower(liftPower);
         } else {
             r.poweredHoldCycle();
         }
@@ -87,6 +87,7 @@ public class Teleop extends OpMode {
 
         if(gamepad1.y){
             r.ShareGoal();
+            telemetry.addLine("done");
         }
         telemetry.addData("BucketPos: ", r.BucketPosition());
         telemetry.addData("liftPos: ", r.getLiftPos());

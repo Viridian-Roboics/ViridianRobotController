@@ -155,10 +155,9 @@ public class CompBotW1Attachments extends CompBotW1 {
         setBucket(.5);
         moveLiftPosition(-3300,-1);
         setBucket(.3);
-        moveLiftPosition(1700, -1);
+        moveLiftPosition(-1700, -1);
         setBucket(1);
         moveLiftPosition(-5000, -1);
-
     }
 
     public void spin(long time) {

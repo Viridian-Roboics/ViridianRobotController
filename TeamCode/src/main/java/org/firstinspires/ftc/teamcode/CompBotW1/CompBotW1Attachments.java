@@ -144,17 +144,20 @@ public class CompBotW1Attachments extends CompBotW1 {
         return bucket0.getPosition();
     }
     public void ShareGoal(){
-        if (getLiftPos() > 5000) {
+        if (getLiftPos() > 5000) { //overflow
+            int dif = (getLiftPos() - 5000);
+            moveLiftPosition(dif, 1);
+        }
+        else if (getLiftPos() < 5000) {
             int dif = -1 * (getLiftPos() - 5000);
             moveLiftPosition(dif, -1);
         }
-        else if (getLiftPos() < 5000) {
-            int dif = getLiftPos() - 5000;
-            moveLiftPosition(dif, 1);
-        }
         setBucket(.5);
-        moveLiftPosition(3300,1);
+        moveLiftPosition(-3300,-1);
         setBucket(.3);
+        moveLiftPosition(-1700, -1);
+        setBucket(1);
+        moveLiftPosition(-5000, -1);
     }
 
     public void spin(long time) {

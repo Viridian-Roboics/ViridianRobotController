@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Vuforia;
+package org.firstinspires.ftc.teamcode.Disabled;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -16,6 +16,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefau
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 @TeleOp(name="Vuforia Test", group = "Concept")
+@Disabled
 public class ConceptVuforiaDriveToTargetWebcam extends LinearOpMode
 {
     final double MM_PER_INCH = 25.40 ;   //  Metric conversion

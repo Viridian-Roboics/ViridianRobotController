@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.CompBotV3;
+package org.firstinspires.ftc.teamcode.Disabled;
 
 import androidx.core.math.MathUtils;
 
@@ -6,15 +6,17 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.CompBotV3.CompBotV3;
-import org.firstinspires.ftc.teamcode.CompBotV3.CompBotV3Attachments;
+import org.firstinspires.ftc.teamcode.CompBotW1.CompBotW1Attachments;
+import org.firstinspires.ftc.teamcode.Disabled.CompBotV3.CompBotV3;
 
-@TeleOp(name="Viridian Competition Teleop Old, 1 Player")
+@TeleOp(name="Viridian Competition Teleop, 1 Player")
 @Disabled
 public class Teleop extends OpMode {
-    CompBotV3Attachments r = new CompBotV3Attachments();
+    CompBotW1Attachments r = new CompBotW1Attachments();
     double initialHeading, error;
     boolean headingReset = false;
+
+    double liftPower = 1;
 
     @Override
     public void init() {
@@ -31,9 +33,9 @@ public class Teleop extends OpMode {
         turn = (Math.abs(turn)>0.05 ? turn : 0);
 
         // Power adjust
-        y *= (gamepad1.right_bumper?0.4:1);
-        x *= (gamepad1.right_bumper?0.4:1);
-        turn *= (gamepad1.right_bumper?0.4:1);
+        y *= (gamepad1.right_stick_button?0.4:1);
+        x *= (gamepad1.right_stick_button?0.4:1);
+        turn *= (gamepad1.right_stick_button?0.4:1);
 
         if(Math.abs(y) > Math.abs(x)) {
             x = 0;
@@ -57,18 +59,41 @@ public class Teleop extends OpMode {
         r.br.setPower(MathUtils.clamp(-(y+x-turn),-1,1));
 
         r.intake.setPower((gamepad1.a?1:0) - (gamepad1.b?1:0));
-        r.lift.setPower((gamepad1.dpad_up?1:0) - (gamepad1.dpad_down?1:0));
-        r.spin.setPower(gamepad1.right_trigger-gamepad1.left_trigger);
-        r.bucket.setPower(gamepad1.left_bumper?-1:1);
+        r.spin0.setPower(gamepad1.right_trigger-gamepad1.left_trigger);
+        r.spin1.setPower(gamepad1.right_trigger-gamepad1.left_trigger);
 
-        int a = r.lift.getCurrentPosition();
-        telemetry.addData("liftposition", a);
-        telemetry.addData("error", error);
-        telemetry.update();
+        if(gamepad1.dpad_up) {
+            r.stopPoweredHold();
+            r.setLiftPower(liftPower);
+        } else if(gamepad1.dpad_down) {
+            r.stopPoweredHold();
+            r.setLiftPower(-liftPower);
+        } else {
+            r.poweredHoldCycle();
+        }
 
         if(gamepad1.right_stick_button) {
             r.imu.reset();
         }
+
+        if(gamepad1.left_bumper){
+            r.setBucketOverride(.3);
+
+        }
+        else if(gamepad1.right_bumper){
+            r.setBucketOverride(1);
+        }
+
+        if(gamepad1.x){
+            r.setBucketOverride(.3);
+        }
+
+        if(gamepad1.y){
+            r.ShareGoal();
+        }
+        telemetry.addData("BucketPos: ", r.BucketPosition());
+        telemetry.addData("liftPos: ", r.getLiftPos());
+        telemetry.update();
 
     }
 

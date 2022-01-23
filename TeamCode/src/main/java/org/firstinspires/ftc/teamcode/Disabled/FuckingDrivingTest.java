@@ -1,12 +1,14 @@
-package org.firstinspires.ftc.teamcode.Tests;
+package org.firstinspires.ftc.teamcode.Disabled;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.CompBotW1.CompBotW1Attachments;
 
 @Autonomous(name="fuck me")
+@Disabled
 public class FuckingDrivingTest extends LinearOpMode {
     CompBotW1Attachments r = new CompBotW1Attachments();
 

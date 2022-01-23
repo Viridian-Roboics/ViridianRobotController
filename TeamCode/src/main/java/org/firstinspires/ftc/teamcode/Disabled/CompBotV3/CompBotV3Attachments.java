@@ -1,10 +1,8 @@
-package org.firstinspires.ftc.teamcode.CompBotV3;
+package org.firstinspires.ftc.teamcode.Disabled.CompBotV3;
 
-import com.arcrobotics.ftclib.util.InterpLUT;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 

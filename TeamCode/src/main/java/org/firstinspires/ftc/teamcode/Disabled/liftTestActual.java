@@ -1,11 +1,13 @@
-package org.firstinspires.ftc.teamcode.Tests;
+package org.firstinspires.ftc.teamcode.Disabled;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.CompBotW1.CompBotW1Attachments;
 
 @TeleOp(name="liftTestActual")
+@Disabled
 public class liftTestActual extends OpMode {
     CompBotW1Attachments r = new CompBotW1Attachments();
     double posInit = 0;

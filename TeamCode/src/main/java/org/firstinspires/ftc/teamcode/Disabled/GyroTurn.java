@@ -1,19 +1,12 @@
-package org.firstinspires.ftc.teamcode.Tests;
+package org.firstinspires.ftc.teamcode.Disabled;
 
-import static org.firstinspires.ftc.teamcode.CompBotV3.CompBotV3.distanceK;
+import static org.firstinspires.ftc.teamcode.Disabled.CompBotV3.CompBotV3.distanceK;
 
 import com.arcrobotics.ftclib.hardware.RevIMU;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.teamcode.vision.SimpleBlueVisionYCbCr;
-import org.firstinspires.ftc.teamcode.vision.SimpleExtraVisionYCbCr;
-import org.firstinspires.ftc.teamcode.vision.SimpleRedVisionYCbCr;
-import org.openftc.easyopencv.OpenCvCamera;
 
 public class GyroTurn extends LinearOpMode {
     public DcMotor fl = null, fr = null, bl = null, br = null;

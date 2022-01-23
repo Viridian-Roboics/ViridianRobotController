@@ -1,15 +1,20 @@
-package org.firstinspires.ftc.teamcode.CompBotW1;
+package org.firstinspires.ftc.teamcode.AutonRecorder;
 
 import androidx.core.math.MathUtils;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.CompBotV3.CompBotV3;
+import org.firstinspires.ftc.teamcode.CompBotW1.CompBotW1Attachments;
+import org.firstinspires.ftc.teamcode.Disabled.CompBotV3.CompBotV3;
 
-@TeleOp(name="Viridian Competition Teleop, 2 Player")
-public class Teleop2p extends OpMode {
+import java.util.ArrayList;
+
+public class AutonRecorder extends OpMode {
+    ArrayList<Event> events = new ArrayList<>();
     CompBotW1Attachments r = new CompBotW1Attachments();
+    ElapsedTime e = new ElapsedTime();
+    boolean reset = true;
     double initialHeading, error;
     boolean headingReset = false;
 
@@ -22,6 +27,14 @@ public class Teleop2p extends OpMode {
 
     @Override
     public void loop() {
+        // Record data
+        if(reset) {
+            e.reset();
+        } else if(e.milliseconds() > 30) {
+            events.add(new Event(gamepad1));
+            e.reset();
+        }
+
         double y, x, turn;
         if(Math.abs(gamepad2.left_stick_y) > 0 || Math.abs(gamepad2.left_stick_x) > 0 ||  Math.abs(gamepad2.right_stick_x) > 0) {
             y = gamepad2.left_stick_y;
@@ -39,9 +52,9 @@ public class Teleop2p extends OpMode {
         turn = (Math.abs(turn)>0.05 ? turn : 0);
 
         // Power adjust
-        y *= (gamepad2.right_bumper || gamepad1.left_stick_button || gamepad2.left_stick_button ?0.4:1);
-        x *= (gamepad2.right_bumper || gamepad1.left_stick_button || gamepad2.left_stick_button ?0.4:1);
-        turn *= (gamepad2.right_bumper|| gamepad1.left_stick_button || gamepad2.left_stick_button ?0.4:1);
+        y *= (gamepad1.right_stick_button || gamepad2.right_bumper ?0.4:1);
+        x *= (gamepad1.right_stick_button || gamepad2.right_bumper ?0.4:1);
+        turn *= (gamepad1.right_stick_button || gamepad2.right_bumper ?0.4:1);
 
         if(Math.abs(y) > Math.abs(x)) {
             x = 0;
@@ -82,17 +95,7 @@ public class Teleop2p extends OpMode {
             r.imu.reset();
         }
 
-        if(gamepad1.left_bumper){
-            r.setBucketOverride(.3);
-
-        }
-        else if(gamepad1.right_bumper){
-            r.setBucketOverride(1);
-        }
-
-        if(gamepad1.x){
-            r.setBucketOverride(.3);
-        }
+        r.setBucketOverride(gamepad1.left_bumper?.3:1);
 
         if(gamepad1.y){
             r.ShareGoal();
@@ -105,5 +108,6 @@ public class Teleop2p extends OpMode {
     @Override
     public void stop() {
         r.stop();
+        // Write to file
     }
 }

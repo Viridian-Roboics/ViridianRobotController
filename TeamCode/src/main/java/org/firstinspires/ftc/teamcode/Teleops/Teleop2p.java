@@ -1,14 +1,15 @@
-package org.firstinspires.ftc.teamcode.CompBotW1;
+package org.firstinspires.ftc.teamcode.Teleops;
 
 import androidx.core.math.MathUtils;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.CompBotV3.CompBotV3;
+import org.firstinspires.ftc.teamcode.CompBotW1.CompBotW1Attachments;
+import org.firstinspires.ftc.teamcode.Disabled.CompBotV3.CompBotV3;
 
-@TeleOp(name="Viridian Competition Teleop, 1 Player")
-public class Teleop extends OpMode {
+@TeleOp(name="Viridian Competition Teleop")
+public class Teleop2p extends OpMode {
     CompBotW1Attachments r = new CompBotW1Attachments();
     double initialHeading, error;
     boolean headingReset = false;
@@ -22,7 +23,16 @@ public class Teleop extends OpMode {
 
     @Override
     public void loop() {
-        double y = gamepad1.left_stick_y, x = -1*gamepad1.left_stick_x, turn = -1*gamepad1.right_stick_x;
+        double y, x, turn;
+        if(Math.abs(gamepad2.left_stick_y) > 0 || Math.abs(gamepad2.left_stick_x) > 0 ||  Math.abs(gamepad2.right_stick_x) > 0) {
+            y = gamepad2.left_stick_y;
+            x = -1*gamepad2.left_stick_x;
+            turn = -1*gamepad2.right_stick_x;
+        } else {
+            y = gamepad1.left_stick_y;
+            x = -1*gamepad1.left_stick_x;
+            turn = -1*gamepad1.right_stick_x;
+        }
 
         // Deadzone
         y = (Math.abs(y)>0.05 ? y : 0);
@@ -30,9 +40,9 @@ public class Teleop extends OpMode {
         turn = (Math.abs(turn)>0.05 ? turn : 0);
 
         // Power adjust
-        y *= (gamepad1.right_bumper|| gamepad1.left_stick_button?0.4:1);
-        x *= (gamepad1.right_bumper|| gamepad1.left_stick_button?0.4:1);
-        turn *= (gamepad1.right_bumper|| gamepad1.left_stick_button?0.4:1);
+        y *= (gamepad1.right_stick_button || gamepad2.right_bumper ?0.4:1);
+        x *= (gamepad1.right_stick_button || gamepad2.right_bumper ?0.4:1);
+        turn *= (gamepad1.right_stick_button || gamepad2.right_bumper ?0.4:1);
 
         if(Math.abs(y) > Math.abs(x)) {
             x = 0;
@@ -73,17 +83,7 @@ public class Teleop extends OpMode {
             r.imu.reset();
         }
 
-        if(gamepad1.left_bumper){
-            r.setBucketOverride(.3);
-
-        }
-        else if(gamepad1.right_bumper){
-            r.setBucketOverride(1);
-        }
-
-        if(gamepad1.x){
-            r.setBucketOverride(.3);
-        }
+        r.setBucketOverride(gamepad1.left_bumper?.3:1);
 
         if(gamepad1.y){
             r.ShareGoal();

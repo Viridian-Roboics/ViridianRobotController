@@ -1,7 +1,8 @@
-package org.firstinspires.ftc.teamcode.Vuforia;
+package org.firstinspires.ftc.teamcode.Disabled;
 
 import androidx.core.math.MathUtils;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -13,10 +14,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-import org.firstinspires.ftc.teamcode.CompBotV3.CompBotV3;
-import org.firstinspires.ftc.teamcode.CompBotV3.CompBotV3Attachments;
+import org.firstinspires.ftc.teamcode.Disabled.CompBotV3.CompBotV3;
+import org.firstinspires.ftc.teamcode.Disabled.CompBotV3.CompBotV3Attachments;
 
 @TeleOp(name="Viridian Competition Teleop Vuforia")
+@Disabled
 public class TeleopVuforia extends OpMode {
     CompBotV3Attachments r = new CompBotV3Attachments();
     double initialHeading, error;

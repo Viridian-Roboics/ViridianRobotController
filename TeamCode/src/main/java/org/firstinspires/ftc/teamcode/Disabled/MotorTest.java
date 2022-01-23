@@ -1,11 +1,13 @@
-package org.firstinspires.ftc.teamcode.Tests;
+package org.firstinspires.ftc.teamcode.Disabled;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name="ahjdssdjakhsduhgdwquh9nqwubdwqubuwbdqubiwdubwdniqdwbnuji")
+@Disabled
 public class MotorTest extends OpMode {
     public DcMotor fl = null, fr = null, bl = null, br = null;
     @Override

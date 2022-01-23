@@ -1,15 +1,13 @@
 package org.firstinspires.ftc.teamcode.Autons;
 
-import static org.firstinspires.ftc.teamcode.CompBotV3.CompBotV3.driveUntilMechStop;
-import static org.firstinspires.ftc.teamcode.CompBotV3.CompBotV3.nEncDrive;
-import static org.firstinspires.ftc.teamcode.CompBotV3.CompBotV3.runMotorTime;
+import static org.firstinspires.ftc.teamcode.Disabled.CompBotV3.CompBotV3.driveUntilMechStop;
+import static org.firstinspires.ftc.teamcode.Disabled.CompBotV3.CompBotV3.nEncDrive;
+import static org.firstinspires.ftc.teamcode.Disabled.CompBotV3.CompBotV3.runMotorTime;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.CompBotV3.CompBotV3Attachments;
 import org.firstinspires.ftc.teamcode.CompBotW1.CompBotW1Attachments;
 
 import java.util.Arrays;

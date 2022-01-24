@@ -9,7 +9,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.CompBotW1.CompBotW1Attachments;
 import org.firstinspires.ftc.teamcode.Disabled.CompBotV3.CompBotV3;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class AutonPlayer extends LinearOpMode {
     ArrayList<Event> events = new ArrayList<>();
@@ -19,11 +22,18 @@ public class AutonPlayer extends LinearOpMode {
     double initialHeading, error;
     boolean headingReset = false;
     double liftPower = 1;
+    Scanner sc;
 
     @Override
     public void runOpMode() throws InterruptedException {
         r.init(hardwareMap);
         // Read file
+        try {
+            sc = new Scanner(new File("/sdcard/path/to/your/file.ext"));
+        } catch (FileNotFoundException fileNotFoundException) {
+            fileNotFoundException.printStackTrace();
+        }
+
         waitForStart();
         e.reset();
         while(true) {
@@ -33,7 +43,7 @@ public class AutonPlayer extends LinearOpMode {
             }
             if(e.milliseconds() > 30) {
                 // Run teleop
-                Event gamepad1 = events.get(0);
+                Event gamepad1 = new Event(sc.nextLine());
 
                 double y, x, turn;
                 y = gamepad1.left_stick_y;

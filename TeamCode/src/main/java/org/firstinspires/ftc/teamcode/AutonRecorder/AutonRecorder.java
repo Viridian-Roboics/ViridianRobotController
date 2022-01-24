@@ -8,6 +8,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.CompBotW1.CompBotW1Attachments;
 import org.firstinspires.ftc.teamcode.Disabled.CompBotV3.CompBotV3;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
 
 public class AutonRecorder extends OpMode {
@@ -17,12 +21,19 @@ public class AutonRecorder extends OpMode {
     boolean reset = true;
     double initialHeading, error;
     boolean headingReset = false;
+    private Writer fileWriter;
 
     double liftPower = 1;
 
     @Override
     public void init() {
         r.init(hardwareMap);
+        try {
+            FileWriter writer = new FileWriter("/sdcard/path/to/your/file.ext");
+            fileWriter = new BufferedWriter(writer);
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot write to file", e);
+        }
     }
 
     @Override
@@ -31,7 +42,7 @@ public class AutonRecorder extends OpMode {
         if(reset) {
             e.reset();
         } else if(e.milliseconds() > 30) {
-            events.add(new Event(gamepad1));
+            writeToFile(new Event(gamepad1).toString());
             e.reset();
         }
 
@@ -108,6 +119,18 @@ public class AutonRecorder extends OpMode {
     @Override
     public void stop() {
         r.stop();
-        // Write to file
+        try {
+            fileWriter.close();
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot close file", e);
+        }
+    }
+
+    private void writeToFile(String data) {
+        try {
+            fileWriter.write(data);
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot write to file", e);
+        }
     }
 }

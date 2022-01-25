@@ -28,7 +28,7 @@ public class BlueFarAuton extends LinearOpMode {
         boolean[] pos = {false,false,false};
         ElapsedTime e = new ElapsedTime();
         while(!isStarted()) {
-            pos = r.p.getPositions();
+            pos = r.p.getPositions(); // Detection
         }
 
         r.phoneCam.stopStreaming();
@@ -38,17 +38,19 @@ public class BlueFarAuton extends LinearOpMode {
 
         double heading = r.imu.getHeading();
 
-        // Strafe over
+        // Strafe over to carousel
         r.AEncDrive(0,22,0,0.2,4000);
 
+        // Align with initial heading
         r.gyroTurnAbsolute(heading,0.2,2000);
 
-        // Spin
+        // Spin the duck
         r.spin(2000);
 
-        // Move over
+        // Move over to Hub
         r.AEncDrive(0,-50,0,-dPower);
 
+        // Align with initial heading
         r.gyroTurnAbsolute(heading,0.2,2000);
 
         //lift and drop

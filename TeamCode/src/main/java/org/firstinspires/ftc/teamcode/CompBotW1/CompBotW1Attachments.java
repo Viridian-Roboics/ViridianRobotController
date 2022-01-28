@@ -14,11 +14,12 @@ public class CompBotW1Attachments extends CompBotW1 {
     public Servo bucket0, bucket1;
     public CRServo spin0, spin1;
 
-    public final static int liftSafeAdder = 4600, liftMaxAdder = 10000;
+    public final static int liftSafeAdder = 6300, liftMaxAdder = 10000;
     public int liftZero, liftSafe, liftMax;
     public final static double spinPower = -1;
+    public double bucketOpen = 0.25, bucketClosed = 1;
 
-    public final static int lowLift = 0, medLift = 0, highLift = 0;
+    public final static int lowLift = 1400, medLift = 3600, highLift = 6300;
 
     private int liftHold;
     private boolean holding = false;
@@ -114,29 +115,8 @@ public class CompBotW1Attachments extends CompBotW1 {
     public boolean isLiftSafe() {
         return lift.getCurrentPosition() >= liftSafe && lift.getCurrentPosition() <= liftMax;
     }
-    // Run this in loop
-    public void poweredHoldCycle() {
-        if(!holding) {
-            liftHold = lift.getCurrentPosition();
-            holding = true;
-        } else {
-            lift.setPower(-0.03*(lift.getCurrentPosition()-liftHold));
-        }
-    }
-    public void stopPoweredHold() {
-        if(holding) {
-            lift.setPower(0);
-        }
-        holding = false;
-    }
 
     public void setBucket(double position) {
-        if(lift.getCurrentPosition() > liftSafe) {
-            bucket0.setPosition(position);
-            bucket1.setPosition(1-position);
-        }
-    }
-    public void setBucketOverride(double position) {
         bucket0.setPosition(position);
         bucket1.setPosition(1-position);
     }
@@ -158,6 +138,10 @@ public class CompBotW1Attachments extends CompBotW1 {
         moveLiftPosition(-1700, -1);
         setBucket(1);
         moveLiftPosition(-5000, -1);
+    }
+    public void fixBucket() {
+        setLiftPosition(liftSafe, 1);
+        setBucket(0.45);
     }
 
     public void spin(long time) {
@@ -181,15 +165,15 @@ public class CompBotW1Attachments extends CompBotW1 {
     }
 
     public void lowLift() {
-        setLiftPosition(liftZero+lowLift,0.5);
+        setLiftPosition(liftZero+lowLift,1);
     }
     public void medLift() {
-        setLiftPosition(liftZero+medLift, 0.5);
+        setLiftPosition(liftZero+medLift, 1);
     }
     public void highLift() {
-        setLiftPosition(liftZero+highLift, 0.5);
+        setLiftPosition(liftZero+highLift, 1);
     }
     public void zeroLift() {
-        setLiftPosition(liftZero, 0.5);
+        setLiftPosition(liftZero, 1);
     }
 }

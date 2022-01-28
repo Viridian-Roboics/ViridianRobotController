@@ -92,21 +92,19 @@ public class AutonRecorder extends OpMode {
         r.spin0.setPower(gamepad1.right_trigger-gamepad1.left_trigger);
         r.spin1.setPower(gamepad1.right_trigger-gamepad1.left_trigger);
 
-        if(gamepad1.dpad_up) {
-            r.stopPoweredHold();
+        if((gamepad1.right_trigger > 0.2 && r.getLiftPos() < 6430) || gamepad1.dpad_up) {
             r.setLiftPower(liftPower);
-        } else if(gamepad1.dpad_down) {
-            r.stopPoweredHold();
+        } else if ((gamepad1.left_trigger > 0.2 && r.getLiftPos() > 0) || gamepad1.dpad_down) {
             r.setLiftPower(-liftPower);
         } else {
-            r.poweredHoldCycle();
+            r.setLiftPower(0);
         }
 
         if(gamepad1.right_stick_button) {
             r.imu.reset();
         }
 
-        r.setBucketOverride(gamepad1.left_bumper?.3:1);
+        r.setBucket(gamepad1.left_bumper?.3:1);
 
         if(gamepad1.y){
             r.ShareGoal();

@@ -66,31 +66,36 @@ public class Teleop2p extends OpMode {
         r.br.setPower(MathUtils.clamp(-(y+x-turn),-1,1));
 
         r.intake.setPower((gamepad1.a?1:0) - (gamepad1.b?1:0));
-        r.spin0.setPower(gamepad1.right_trigger-gamepad1.left_trigger);
-        r.spin1.setPower(gamepad1.right_trigger-gamepad1.left_trigger);
+        r.spin0.setPower(gamepad2.right_trigger-gamepad2.left_trigger);
+        r.spin1.setPower(gamepad2.right_trigger-gamepad2.left_trigger);
 
-        if(gamepad1.dpad_up) {
-            r.stopPoweredHold();
+        if((gamepad1.right_trigger > 0.2 && r.getLiftPos() < 6430) || gamepad1.dpad_up) {
             r.setLiftPower(liftPower);
-        } else if(gamepad1.dpad_down) {
-            r.stopPoweredHold();
+        } else if ((gamepad1.left_trigger > 0.2 && r.getLiftPos() > 0) || gamepad1.dpad_down) {
             r.setLiftPower(-liftPower);
         } else {
-            r.poweredHoldCycle();
+            r.setLiftPower(0);
         }
 
         if(gamepad1.right_stick_button) {
             r.imu.reset();
         }
 
-        r.setBucketOverride(gamepad1.left_bumper?.3:1);
+        r.setBucket(gamepad1.left_bumper?.25:1);
 
-        if(gamepad1.y){
-            r.ShareGoal();
-        }
+        //if(gamepad1.y){
+            //r.ShareGoal();
+        //}
+        telemetry.addLine(String.valueOf(gamepad1.a));
         telemetry.addData("BucketPos: ", r.BucketPosition());
         telemetry.addData("liftPos: ", r.getLiftPos());
         telemetry.update();
+
+        if(gamepad1.x) {
+            r.liftZero = r.lift.getCurrentPosition();
+        }
+
+
     }
 
     @Override

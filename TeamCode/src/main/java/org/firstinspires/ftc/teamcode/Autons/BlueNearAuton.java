@@ -71,7 +71,7 @@ public class BlueNearAuton extends LinearOpMode {
         r.gyroTurn(90,0.2,5000);
         telemetry.addLine("finished with turn");
         telemetry.update();
-        r.AEncDrive(0,-15,0,-0.15,3000);
+        r.AEncDrive(0,-15,0,-0.15,3000); // bang into wall
         r.AEncDrive(100,0,1,0);
 
         r.stop();

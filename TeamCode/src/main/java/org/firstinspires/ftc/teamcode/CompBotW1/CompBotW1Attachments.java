@@ -181,10 +181,10 @@ public class CompBotW1Attachments extends CompBotW1 {
 
     public void autonLift(boolean[] p, double dPower) {
 
-        AEncDrive(-5,0,-0.15,0);
-        AEncDrive(16,0,dPower,0);
+        AEncDrive(-3,0,-0.15,0);
+        AEncDrive(20,0,dPower,0);
         fixBucket();
-        sleep(1000);
+        sleep(250);
         if (Arrays.equals(p, new boolean[]{true, false, false})) {// left
             lowLift();
         } else if (Arrays.equals(p, new boolean[]{false, true, false})) {// middle
@@ -193,13 +193,12 @@ public class CompBotW1Attachments extends CompBotW1 {
             highLift();
         }
         setBucket(0.25);
-        sleep(1000);
-        AEncDrive(-18,0,-dPower,0);
-        sleep(1000);
+        sleep(500);
         fixBucket();
         setBucket(1);
-        sleep(1000);
+        sleep(250);
         zeroLift();
+        AEncDrive(-22,0,dPower,0);
     }
 
     private void sleep(int i) {

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Autons;
+package org.firstinspires.ftc.teamcode.Disabled;
 
 import static org.firstinspires.ftc.teamcode.Disabled.CompBotV3.CompBotV3.driveUntilMechStop;
 import static org.firstinspires.ftc.teamcode.Disabled.CompBotV3.CompBotV3.nEncDrive;
@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.CompBotW1.CompBotW1Attachments;
 
 import java.util.Arrays;
 
-// Start blue storage side
+// Start red far side
 
 @Autonomous(name="Red Carousel Side")
 @Disabled
@@ -24,13 +24,13 @@ public class RedFarAuton extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        r.init(hardwareMap,true, telemetry,"red");
+        r.init(hardwareMap,true, telemetry,"blue");
         telemetry.addLine("init finished");
         telemetry.update();
         boolean[] pos = {false,false,false};
         ElapsedTime e = new ElapsedTime();
         while(!isStarted()) {
-            pos = r.q.getPositions();
+            pos = r.p.getPositions(); // Detection
         }
 
         r.phoneCam.stopStreaming();
@@ -38,21 +38,19 @@ public class RedFarAuton extends LinearOpMode {
 
         runtime.reset();
 
-        // Turn
-        r.AEncDrive(6,0,dPower,0);
-        r.gyroTurn(90,dPower,3000);
+        double heading = r.imu.getHeading();
 
-        // Strafe over
-        r.AEncDrive(14,0,dPower,0);
-        r.AEncDrive(10,0,dPower,0,2000);
+        // Strafe over to carousel
+        r.AEncDrive(0,38,0,0.2,4000);
 
-        // Spin
+        // Align with initial heading
+        r.gyroTurnAbsolute(heading,0.2,2000);
+
+        // Spin the duck
         r.spin(2000);
 
-        // Move over
-        r.AEncDrive(-56,0,-dPower,0);
-        r.gyroTurn(-90,-dPower,3000);
-        r.AEncDrive(-6,0,0.15,0,1500);
+        // Move over to Hub
+        r.AEncDrive(0,-60,0,-dPower);
 
         //lift and drop
         r.autonLift(pos,dPower);

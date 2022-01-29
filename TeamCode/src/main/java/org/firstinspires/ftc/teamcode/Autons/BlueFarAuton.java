@@ -58,6 +58,8 @@ public class BlueFarAuton extends LinearOpMode {
         telemetry.addLine("finished with lift");
         telemetry.update();
 
+        r.AEncDrive(-20,0,0,-dPower);
+
         // Drive to depot
         r.AEncDrive(30.5,55.5,0.3,0.8,5000);
 

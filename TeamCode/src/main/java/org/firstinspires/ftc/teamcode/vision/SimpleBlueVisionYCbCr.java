@@ -20,7 +20,7 @@ public class SimpleBlueVisionYCbCr extends OpenCvPipeline {
     }
     public SimpleBlueVisionYCbCr() {}
 
-    public Scalar x = new Scalar(0,0,0,0), low = new Scalar(0, 101, 162, 0), high = new Scalar(255, 108, 175, 255), low2 = new Scalar(0,80,92,0), high2 = new Scalar(255,90,107,255);
+    public Scalar x = new Scalar(0,0,0,0), low = new Scalar(0, 101, 162, 0), high = new Scalar(255, 108, 175, 255), low2 = new Scalar(0,80,90,0), high2 = new Scalar(255,90,107,255);
     @Override
     public Mat processFrame(Mat input) {
         // YCbCr scalars

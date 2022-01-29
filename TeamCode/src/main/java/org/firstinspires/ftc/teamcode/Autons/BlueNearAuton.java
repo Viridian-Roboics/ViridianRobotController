@@ -38,7 +38,7 @@ public class BlueNearAuton extends LinearOpMode {
         r.setBucket(1);
 
         // line up with drop
-        r.AEncDrive(0,27,0,dPower);
+        r.AEncDrive(0,22,0,dPower,3000);
 
         //lift and drop
         r.autonLift(pos,dPower);
@@ -47,11 +47,11 @@ public class BlueNearAuton extends LinearOpMode {
 
 
         // Strafe to warehouse
-        r.gyroTurn(90,0.2,5000);
+        r.gyroTurn(90,0.2,3000);
         telemetry.addLine("finished with turn");
         telemetry.update();
-        r.AEncDrive(0,-15,0,-0.15,3000); // bang into wall
-        r.AEncDrive(100,0,1,0);
+        r.AEncDrive(0,-15,0,-0.15,2000); // bang into wall
+        r.AEncDrive(72,0,1,0);
 
         r.stop();
 

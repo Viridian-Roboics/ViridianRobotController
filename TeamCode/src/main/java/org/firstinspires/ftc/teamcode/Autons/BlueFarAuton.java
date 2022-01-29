@@ -48,7 +48,7 @@ public class BlueFarAuton extends LinearOpMode {
         r.spin(2000);
 
         // Move over to Hub
-        r.AEncDrive(0,-50,0,-dPower);
+        r.AEncDrive(0,-50,0,-dPower,4000);
 
         // Align with initial heading
         r.gyroTurnAbsolute(heading,0.2,2000);
@@ -57,8 +57,6 @@ public class BlueFarAuton extends LinearOpMode {
         r.autonLift(pos,dPower);
         telemetry.addLine("finished with lift");
         telemetry.update();
-
-        r.AEncDrive(-20,0,0,-dPower);
 
         // Drive to depot
         r.AEncDrive(30.5,55.5,0.3,0.8,5000);

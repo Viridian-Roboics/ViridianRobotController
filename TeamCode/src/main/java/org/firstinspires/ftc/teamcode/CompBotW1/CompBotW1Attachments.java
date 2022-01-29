@@ -149,8 +149,8 @@ public class CompBotW1Attachments extends CompBotW1 {
     public void spin(long time) {
         ElapsedTime e = new ElapsedTime();
         while(e.milliseconds() < time) {
-            spin0.setPower(spinPower * .8);
-            spin1.setPower(spinPower * .8);
+            spin0.setPower(spinPower * .7);
+            spin1.setPower(spinPower * .7);
         }
         spin0.setPower(0);
         spin1.setPower(0);
@@ -159,8 +159,8 @@ public class CompBotW1Attachments extends CompBotW1 {
     public void spin2(long time) {
         ElapsedTime e = new ElapsedTime();
         while(e.milliseconds() < time) {
-            spin0.setPower(-spinPower * .8);
-            spin1.setPower(-spinPower * .8);
+            spin0.setPower(-spinPower * .7);
+            spin1.setPower(-spinPower * .7);
         }
         spin0.setPower(0);
         spin1.setPower(0);

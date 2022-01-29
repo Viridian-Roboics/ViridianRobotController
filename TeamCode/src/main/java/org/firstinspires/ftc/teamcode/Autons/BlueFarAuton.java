@@ -45,7 +45,7 @@ public class BlueFarAuton extends LinearOpMode {
         r.gyroTurnAbsolute(heading,0.2,2000);
 
         // Spin the duck
-        r.spin(2000);
+        r.spin(2800);
 
         // Move over to Hub
         r.AEncDrive(0,-50,0,-dPower,4000);
@@ -59,7 +59,7 @@ public class BlueFarAuton extends LinearOpMode {
         telemetry.update();
 
         // Drive to depot
-        r.AEncDrive(30.5,55.5,0.3,0.8,5000);
+        r.AEncDrive(32,55.5,0.3,0.8,5000);
 
         r.stop();
 

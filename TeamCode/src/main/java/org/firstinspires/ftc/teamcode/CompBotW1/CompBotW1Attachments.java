@@ -8,6 +8,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
+import java.util.Arrays;
+
 public class CompBotW1Attachments extends CompBotW1 {
     public DcMotor intake = null, lift = null;
 
@@ -175,5 +177,35 @@ public class CompBotW1Attachments extends CompBotW1 {
     }
     public void zeroLift() {
         setLiftPosition(liftZero, 1);
+    }
+
+    public void autonLift(boolean[] p, double dPower) {
+
+        AEncDrive(-5,0,-0.15,0);
+        AEncDrive(16,0,dPower,0);
+        fixBucket();
+        sleep(1000);
+        if (Arrays.equals(p, new boolean[]{true, false, false})) {// left
+            lowLift();
+        } else if (Arrays.equals(p, new boolean[]{false, true, false})) {// middle
+            medLift();
+        } else {// right
+            highLift();
+        }
+        setBucket(0.25);
+        sleep(1000);
+        AEncDrive(-18,0,-dPower,0);
+        sleep(1000);
+        fixBucket();
+        setBucket(1);
+        sleep(1000);
+        zeroLift();
+    }
+
+    private void sleep(int i) {
+        ElapsedTime e = new ElapsedTime();
+        while(e.milliseconds() < i) {
+
+        }
     }
 }

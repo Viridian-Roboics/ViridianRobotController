@@ -41,26 +41,7 @@ public class BlueNearAuton extends LinearOpMode {
         r.AEncDrive(0,27,0,dPower);
 
         //lift and drop
-        r.AEncDrive(-5,0,-0.15,0);
-        r.AEncDrive(20,0,dPower,0);
-        r.fixBucket();
-        sleep(1000);
-        if (Arrays.equals(pos, new boolean[]{true, false, false})) {// left
-            r.lowLift();
-            r.setBucket(0.25);
-        } else if (Arrays.equals(pos, new boolean[]{false, true, false})) {// middle
-            r.medLift();
-            r.setBucket(0.25);
-        } else {// right
-            r.highLift();
-            r.setBucket(0.25);
-        }
-        sleep(1000);
-        r.AEncDrive(-20,0,-dPower,0);
-        sleep(1000);
-        r.fixBucket();
-        r.setBucket(1);
-        r.zeroLift();
+        r.autonLift(pos,dPower);
         telemetry.addLine("finished with lift");
         telemetry.update();
 

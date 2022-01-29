@@ -83,9 +83,6 @@ public class Teleop2p extends OpMode {
 
         r.setBucket(gamepad1.left_bumper?.25:1);
 
-        //if(gamepad1.y){
-            //r.ShareGoal();
-        //}
         telemetry.addLine(String.valueOf(gamepad1.a));
         telemetry.addData("BucketPos: ", r.BucketPosition());
         telemetry.addData("liftPos: ", r.getLiftPos());

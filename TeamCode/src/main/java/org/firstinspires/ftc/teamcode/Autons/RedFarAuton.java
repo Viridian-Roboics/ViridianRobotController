@@ -53,11 +53,12 @@ public class RedFarAuton extends LinearOpMode {
         r.AEncDrive(-56,0,-dPower,0);
         r.gyroTurn(-90,-dPower,3000);
         r.AEncDrive(-6,0,0.15,0,1500);
-
-        // lift and drop
+        
         //lift and drop
+        r.AEncDrive(-5,0,-0.15,0);
         r.AEncDrive(20,0,dPower,0);
         r.fixBucket();
+        sleep(1000);
         if (Arrays.equals(pos, new boolean[]{true, false, false})) {// left
             r.lowLift();
             r.setBucket(0.25);
@@ -68,6 +69,7 @@ public class RedFarAuton extends LinearOpMode {
             r.highLift();
             r.setBucket(0.25);
         }
+        sleep(1000);
         r.AEncDrive(-20,0,-dPower,0);
         sleep(1000);
         r.fixBucket();

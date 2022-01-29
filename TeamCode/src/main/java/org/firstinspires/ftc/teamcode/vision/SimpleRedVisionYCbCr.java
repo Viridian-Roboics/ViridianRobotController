@@ -41,7 +41,7 @@ public class SimpleRedVisionYCbCr extends OpenCvPipeline {
             ymax = (capstone.get(0).y+capstone.get(0).ysize*2)/input.height();
         } else {
             // In case the capstone wasn't found
-            ymin = 0.7;
+            ymin = 0.4;
             ymax = 1;
         }
         ArrayList<VisionObject> tapePotential = DetectionMethods.detectYCrCb(input, low, high, 0,

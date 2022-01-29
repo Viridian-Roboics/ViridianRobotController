@@ -20,7 +20,7 @@ public class SimpleRedVisionYCbCr extends OpenCvPipeline {
     }
     public SimpleRedVisionYCbCr() {}
 
-    public Scalar x = new Scalar(0,0,0,0), low = new Scalar(0, 175, 105, 0), high = new Scalar(255, 187, 116, 255), low2 = new Scalar(0,80,90,0), high2 = new Scalar(255,90,107,255);
+    public Scalar x = new Scalar(0,0,0,0), low = new Scalar(0, 175, 105, 0), high = new Scalar(255, 187, 116, 255), low2 = new Scalar(0,80,90,0), high2 = new Scalar(255,95,107,255);
     @Override
     public Mat processFrame(Mat input) {
         // YCbCr scalars
@@ -45,7 +45,7 @@ public class SimpleRedVisionYCbCr extends OpenCvPipeline {
             ymax = 1;
         }
         ArrayList<VisionObject> tapePotential = DetectionMethods.detectYCrCb(input, low, high, 0,
-                1,ymin, ymax,0.03,0.1,"tape"); // Detect the tape
+                1,ymin, ymax,0.03,0.09,"tape"); // Detect the tape
         ArrayList<VisionObject> tape = new ArrayList<>();
         for(VisionObject v : tapePotential) {
             if(capstone.size() < 1 || !(Math.abs(v.x-capstone.get(0).x)/input.width() < 0.1)) {

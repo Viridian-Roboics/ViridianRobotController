@@ -20,12 +20,12 @@ public class SimpleBlueVisionYCbCr extends OpenCvPipeline {
     }
     public SimpleBlueVisionYCbCr() {}
 
-    public Scalar x = new Scalar(0,0,0,0), low = new Scalar(0, 83.6, 150.3, 0), high = new Scalar(255, 117.5, 160.1, 255), low2 = new Scalar(0,100,100,0), high2 = new Scalar(255,120,120,255);
+    public Scalar x = new Scalar(0,0,0,0), low = new Scalar(0, 101, 162, 0), high = new Scalar(255, 108, 175, 255), low2 = new Scalar(0,80,92,0), high2 = new Scalar(255,90,107,255);
     @Override
     public Mat processFrame(Mat input) {
         // YCbCr scalars
         ArrayList<VisionObject> capstonePotential = DetectionMethods.detectYCrCb(input, low2, high2, 0,
-                1,0.3,1,0.1,0.25,"capstone"); // detect the capstone
+                1,0,1,0.1,0.25,"capstone"); // detect the capstone
         ArrayList<VisionObject> capstone = new ArrayList<>();
         for(VisionObject v : capstonePotential) {
             capstone.add(v);
@@ -41,11 +41,11 @@ public class SimpleBlueVisionYCbCr extends OpenCvPipeline {
             ymax = (capstone.get(0).y+capstone.get(0).ysize*2)/input.height();
         } else {
             // In case the capstone wasn't found
-            ymin = 0.6;
+            ymin = 0.7;
             ymax = 1;
         }
         ArrayList<VisionObject> tapePotential = DetectionMethods.detectYCrCb(input, low, high, 0,
-                1,ymin, ymax,0.03,0.08,"tape"); // Detect the tape
+                1,ymin, ymax,0.03,0.1,"tape"); // Detect the tape
         ArrayList<VisionObject> tape = new ArrayList<>();
         for(VisionObject v : tapePotential) {
             if(capstone.size() < 1 || !(Math.abs(v.x-capstone.get(0).x)/input.width() < 0.1)) {

@@ -25,7 +25,7 @@ public class SimpleBlueVisionYCbCr extends OpenCvPipeline {
     public Mat processFrame(Mat input) {
         // YCbCr scalars
         ArrayList<VisionObject> capstonePotential = DetectionMethods.detectYCrCb(input, low2, high2, 0,
-                1,0.3,1,0.1,0.7,"capstone"); // detect the capstone
+                1,0.3,1,0.1,0.25,"capstone"); // detect the capstone
         ArrayList<VisionObject> capstone = new ArrayList<>();
         for(VisionObject v : capstonePotential) {
             capstone.add(v);

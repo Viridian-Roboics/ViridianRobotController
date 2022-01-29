@@ -49,8 +49,16 @@ public class DetectionMethods {
                     && within(Math.sqrt(Math.pow(xrange,2)+Math.pow(yrange,2)),
                     Math.sqrt(Math.pow(mask.width(),2)+Math.pow(mask.height(),2))*minSize,
                     Math.sqrt(Math.pow(mask.width(),2)+Math.pow(mask.height(),2))*maxSize)) {
-                // Create a new VisionThing with the contour's information
-                v.add(new VisionObject(x,y,xrange,yrange,kind));
+                boolean exists = false;
+                for(VisionObject a : v) {
+                    if(within(x, a.x - mask.width() * 0.1, a.x + mask.width() + 0.1) && within(y, a.y - mask.height() * 0.1, a.y + mask.height() + 0.1)) {
+                        exists = true;
+                    }
+                }
+                if(!exists || v.isEmpty()) {
+                    // Create a new VisionThing with the contour's information
+                    v.add(new VisionObject(x,y,xrange,yrange,kind));
+                }
             }
         }
         mask.release(); // Release the Mat to prevent memory overflow

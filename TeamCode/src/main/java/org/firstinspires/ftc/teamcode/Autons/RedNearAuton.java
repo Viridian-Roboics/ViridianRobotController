@@ -11,6 +11,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.CompBotW1.CompBotW1Attachments;
 
+import java.util.Arrays;
+
 // Start blue storage side
 
 @Autonomous(name="Red Warehouse Side")
@@ -40,35 +42,26 @@ public class RedNearAuton extends LinearOpMode {
         // line up with drop
         r.AEncDrive(0,-20,0,-dPower);
 
-        // lift and drop
-//        if (Arrays.equals(pos, new boolean[]{true, false, false})) {// left
-//            r.AEncDrive(20,0,dPower,0);
-//               r.lowLift();
-//            r.setBucket(0);
-//            sleep(2000);
-//            r.setBucket(1);
-//            r.zeroLift();
-//            r.AEncDrive(-14,0,-dPower,0);
-//        } else if (Arrays.equals(pos, new boolean[]{false, true, false})) {// middle
-//            r.AEncDrive(16,0,dPower,0);
-//            r.medLift();
-//            r.setBucket(0);
-//            sleep(2000);
-//            r.setBucket(1);
-//            r.zeroLift();
-//            r.AEncDrive(-10,0,-dPower,0);
-//        } else {// right
-//            r.AEncDrive(10,0,dPower,0);
-//           r.highLift();
-//            r.setBucket(0);
-//            sleep(2000);
-//            r.setBucket(1);
-//            r.zeroLift();
-//            r.AEncDrive(-4,0,-dPower,0);
-//        }
-//        telemetry.addLine("finished with lift");
-//        telemetry.update();
-//        r.bucket.setPower(0);
+        //lift and drop
+        r.AEncDrive(20,0,dPower,0);
+        r.fixBucket();
+        if (Arrays.equals(pos, new boolean[]{true, false, false})) {// left
+            r.lowLift();
+            r.setBucket(0.25);
+        } else if (Arrays.equals(pos, new boolean[]{false, true, false})) {// middle
+            r.medLift();
+            r.setBucket(0.25);
+        } else {// right
+            r.highLift();
+            r.setBucket(0.25);
+        }
+        r.AEncDrive(-20,0,-dPower,0);
+        sleep(1000);
+        r.fixBucket();
+        r.setBucket(1);
+        r.zeroLift();
+        telemetry.addLine("finished with lift");
+        telemetry.update();
 
 
         // Strafe to warehouse

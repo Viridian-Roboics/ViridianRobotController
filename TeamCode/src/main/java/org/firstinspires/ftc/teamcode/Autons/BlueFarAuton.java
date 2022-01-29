@@ -54,29 +54,24 @@ public class BlueFarAuton extends LinearOpMode {
         r.gyroTurnAbsolute(heading,0.2,2000);
 
         //lift and drop
+        r.AEncDrive(-5,0,-0.15,0);
+        r.AEncDrive(20,0,dPower,0);
+        r.fixBucket();
         if (Arrays.equals(pos, new boolean[]{true, false, false})) {// left
-            r.AEncDrive(14,0,dPower,0);
             r.lowLift();
-            //r.setBucket(0);
-            sleep(2000);
-            //r.setBucket(1);
-            r.zeroLift();
-            r.AEncDrive(-14,0,-dPower,0);
+            r.setBucket(0.25);
         } else if (Arrays.equals(pos, new boolean[]{false, true, false})) {// middle
-            r.AEncDrive(6,0,dPower,0);
             r.medLift();
-            //r.setBucket(0);
-            sleep(2000);
-            //r.setBucket(1);
-            r.zeroLift();
-            r.AEncDrive(-6,0,-dPower,0);
+            r.setBucket(0.25);
         } else {// right
             r.highLift();
-            //r.setBucket(0);
-            sleep(2000);
-            //r.setBucket(1);
-            r.zeroLift();
+            r.setBucket(0.25);
         }
+        r.AEncDrive(-20,0,-dPower,0);
+        sleep(1000);
+        r.fixBucket();
+        r.setBucket(1);
+        r.zeroLift();
         telemetry.addLine("finished with lift");
         telemetry.update();
 

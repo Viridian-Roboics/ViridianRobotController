@@ -5,6 +5,7 @@ import static org.firstinspires.ftc.teamcode.Disabled.CompBotV3.CompBotV3.nEncDr
 import static org.firstinspires.ftc.teamcode.Disabled.CompBotV3.CompBotV3.runMotorTime;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -15,6 +16,7 @@ import java.util.Arrays;
 // Start blue storage side
 
 @Autonomous(name="Red Carousel Side")
+@Disabled
 public class RedFarAuton extends LinearOpMode {
     public static final double dPower = 0.3;
     ElapsedTime runtime = new ElapsedTime();
@@ -53,31 +55,24 @@ public class RedFarAuton extends LinearOpMode {
         r.AEncDrive(-6,0,0.15,0,1500);
 
         // lift and drop
+        //lift and drop
+        r.AEncDrive(20,0,dPower,0);
+        r.fixBucket();
         if (Arrays.equals(pos, new boolean[]{true, false, false})) {// left
-            r.AEncDrive(20,0,dPower,0);
             r.lowLift();
-            r.setBucket(0);
-            sleep(2000);
-            r.setBucket(1);
-            r.zeroLift();
-            r.AEncDrive(-14,0,-dPower,0);
+            r.setBucket(0.25);
         } else if (Arrays.equals(pos, new boolean[]{false, true, false})) {// middle
-            r.AEncDrive(16,0,dPower,0);
             r.medLift();
-            r.setBucket(0);
-            sleep(2000);
-            r.setBucket(1);
-            r.zeroLift();
-            r.AEncDrive(-10,0,-dPower,0);
+            r.setBucket(0.25);
         } else {// right
-            r.AEncDrive(10,0,dPower,0);
             r.highLift();
-            r.setBucket(0);
-            sleep(2000);
-            r.setBucket(1);
-            r.zeroLift();
-            r.AEncDrive(-4,0,-dPower,0);
+            r.setBucket(0.25);
         }
+        r.AEncDrive(-20,0,-dPower,0);
+        sleep(1000);
+        r.fixBucket();
+        r.setBucket(1);
+        r.zeroLift();
         telemetry.addLine("finished with lift");
         telemetry.update();
 

@@ -39,16 +39,17 @@ public class BlueFarAuton extends LinearOpMode {
         double heading = r.imu.getHeading();
 
         // Strafe over to carousel
-        r.AEncDrive(0,22,0,0.2,4000);
+        r.AEncDrive(0,21,0,0.2,4000);
 
         // Align with initial heading
         r.gyroTurnAbsolute(heading,0.2,2000);
 
         // Spin the duck
-        r.spin(2800);
+        //r.spin(1000);
+        sleep(1000);
 
         // Move over to Hub
-        r.AEncDrive(0,-50,0,-dPower,4000);
+        r.AEncDrive(0,-52,0,-dPower,4000);
 
         // Align with initial heading
         r.gyroTurnAbsolute(heading,0.2,2000);

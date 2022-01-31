@@ -45,7 +45,8 @@ public class RedFarAuton extends LinearOpMode {
         r.gyroTurnAbsolute(heading,0.2,2000);
 
         // Spin the duck
-        r.spin2(2800);
+        //r.spin2(3000);
+        sleep(1000);
 
         // Move over to Hub
         r.AEncDrive(0,52,0,dPower,4000);

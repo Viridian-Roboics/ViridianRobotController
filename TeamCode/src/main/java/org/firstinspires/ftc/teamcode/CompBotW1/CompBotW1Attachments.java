@@ -149,8 +149,8 @@ public class CompBotW1Attachments extends CompBotW1 {
     public void spin(long time) {
         ElapsedTime e = new ElapsedTime();
         while(e.milliseconds() < time) {
-            spin0.setPower(spinPower * .7);
-            spin1.setPower(spinPower * .7);
+            spin0.setPower(-spinPower * .5);
+            spin1.setPower(-spinPower * .5);
         }
         spin0.setPower(0);
         spin1.setPower(0);
@@ -159,8 +159,8 @@ public class CompBotW1Attachments extends CompBotW1 {
     public void spin2(long time) {
         ElapsedTime e = new ElapsedTime();
         while(e.milliseconds() < time) {
-            spin0.setPower(-spinPower * .7);
-            spin1.setPower(-spinPower * .7);
+            spin0.setPower(spinPower * .5);
+            spin1.setPower(spinPower * .5);
         }
         spin0.setPower(0);
         spin1.setPower(0);
@@ -192,7 +192,7 @@ public class CompBotW1Attachments extends CompBotW1 {
     public void autonLift(boolean[] p, double dPower) {
 
         AEncDrive(-3,0,-0.15,0,2000);
-        AEncDrive(20,0,dPower,0);
+        AEncDrive(22,0,dPower,0);
         fixBucket();
         sleep(250);
         if (Arrays.equals(p, new boolean[]{true, false, false})) {// left

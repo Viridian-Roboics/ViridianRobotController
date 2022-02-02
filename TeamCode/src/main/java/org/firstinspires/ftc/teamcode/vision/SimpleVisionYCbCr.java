@@ -10,22 +10,27 @@ import org.openftc.easyopencv.OpenCvPipeline;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class SimpleRedVisionYCbCr extends OpenCvPipeline {
+public class SimpleVisionYCbCr extends OpenCvPipeline {
     Telemetry telemetry = null;
 
     volatile boolean[] positions = {false,false,false};
 
-    public SimpleRedVisionYCbCr(Telemetry telemetry) {
-        this.telemetry = telemetry;
-    }
-    public SimpleRedVisionYCbCr() {}
+    public Scalar x = new Scalar(0,0,0,0), low, high, low2, high2;
+    private final boolean[] left = {true, false, false}, middle = {false, true, false}, right = {false, false, true}, failsafe = right;
 
-    public Scalar x = new Scalar(0,0,0,0), low = new Scalar(0, 175, 105, 0), high = new Scalar(255, 187, 116, 255), low2 = new Scalar(0,80,90,0), high2 = new Scalar(255,95,107,255);
+    public SimpleVisionYCbCr(Telemetry telemetry, Scalar[] tapeColor, Scalar[] capstoneColor) {
+        this.telemetry = telemetry;
+        low = tapeColor[0];
+        high = tapeColor[1];
+        low2 = capstoneColor[0];
+        high2 = capstoneColor[1];
+    }
+
     @Override
     public Mat processFrame(Mat input) {
         // YCbCr scalars
-        ArrayList<VisionObject> capstonePotential = DetectionMethods.detectYCrCb(input, low2, high2, 0,
-                1,0,1,0.1,0.25,"capstone"); // detect the capstone
+        ArrayList<VisionObject> capstonePotential = DetectionMethods.detectYCrCb(input, low2, high2, 0.05,
+                0.95,0,1,0.1,0.25,"capstone"); // detect the capstone
         ArrayList<VisionObject> capstone = new ArrayList<>();
         for(VisionObject v : capstonePotential) {
             capstone.add(v);
@@ -70,11 +75,11 @@ public class SimpleRedVisionYCbCr extends OpenCvPipeline {
                 }
             }
             if(leftTape > rightTape) {
-                positions = new boolean[]{false,false,true}; // Case right capstone
+                positions = right; // Case right capstone
             }else if(leftTape == rightTape) {
-                positions = new boolean[]{false,true,false}; // Case middle capstone
+                positions = middle; // Case middle capstone
             }else {
-                positions = new boolean[]{true,false,false}; // Case left capstone
+                positions = left; // Case left capstone
             }
         }
         // Second priority capstone location
@@ -82,11 +87,11 @@ public class SimpleRedVisionYCbCr extends OpenCvPipeline {
             assert telemetry != null;
             telemetry.addLine("Capstone-only detection");
             if((double)(capstone.get(0).x/input.width())<2.0/5) { // If capstone is in the left portion of the screen
-                positions = new boolean[]{true,false,false};
+                positions = left;
             } else if((double)(capstone.get(0).x/input.width())>3.0/5) { // If capstone is in the right portion of the screen
-                positions = new boolean[]{false,false,true};
+                positions = right;
             } else { // If capstone is in the middle of the screen
-                positions = new boolean[]{false,true,false};
+                positions = middle;
             }
         }
         // Third priority tape location
@@ -108,11 +113,11 @@ public class SimpleRedVisionYCbCr extends OpenCvPipeline {
                 if(p) { i++; }
             }
             if(i >= 2) {
-                positions = new boolean[]{false,true,false}; // failsafe in case it's ambiguous
+                positions = failsafe; // failsafe in case it's ambiguous
                 telemetry.addLine("Detection failed");
             }
             if(Arrays.equals(positions, new boolean[]{false, false, false})) {
-                positions = new boolean[]{false,true,false}; // failsafe in case it's ambiguous
+                positions = failsafe; // failsafe in case it's ambiguous
                 telemetry.addLine("Detection failed");
             }
         }

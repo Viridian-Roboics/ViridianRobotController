@@ -1,31 +1,34 @@
-package org.firstinspires.ftc.teamcode.vision;
+package org.firstinspires.ftc.teamcode.vision_old;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.vision.DetectionMethods;
+import org.firstinspires.ftc.teamcode.vision.VisionObject;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class SimpleBlueVisionYCbCr extends OpenCvPipeline {
+public class SimpleExtraVisionYCbCr extends OpenCvPipeline {
     Telemetry telemetry = null;
 
     volatile boolean[] positions = {false,false,false};
 
 
-    public SimpleBlueVisionYCbCr(Telemetry telemetry) {
+    public SimpleExtraVisionYCbCr(Telemetry telemetry) {
         this.telemetry = telemetry;
     }
-    public SimpleBlueVisionYCbCr() {}
+    public SimpleExtraVisionYCbCr() {}
 
-    public Scalar x = new Scalar(0,0,0,0), low = new Scalar(0, 101, 140, 0), high = new Scalar(255, 125, 175, 255), low2 = new Scalar(0,80,86,0), high2 = new Scalar(255,95,107,255);
+    public Scalar x = new Scalar(0,0,0,0), low = new Scalar(0, 83.6, 150.3, 0), high = new Scalar(255, 117.5, 160.1, 255), low2 = new Scalar(0,100,100,0), high2 = new Scalar(255,120,120,255);
     @Override
     public Mat processFrame(Mat input) {
         // YCbCr scalars
-        ArrayList<VisionObject> capstonePotential = DetectionMethods.detectYCrCb(input, low2, high2, 0.05,
-                0.95,0,1,0.1,0.25,"capstone"); // detect the capstone
+        ArrayList<VisionObject> capstonePotential = DetectionMethods.detectYCrCb(input, low2, high2, 0,
+                1,0,1,0.1,0.2,"capstone"); // detect the capstone
         ArrayList<VisionObject> capstone = new ArrayList<>();
         for(VisionObject v : capstonePotential) {
             capstone.add(v);
@@ -45,7 +48,7 @@ public class SimpleBlueVisionYCbCr extends OpenCvPipeline {
             ymax = 1;
         }
         ArrayList<VisionObject> tapePotential = DetectionMethods.detectYCrCb(input, low, high, 0,
-                1,ymin, ymax,0.03,0.09,"tape"); // Detect the tape
+                1,ymin, ymax,0.03,0.08,"tape"); // Detect the tape
         ArrayList<VisionObject> tape = new ArrayList<>();
         for(VisionObject v : tapePotential) {
             if(capstone.size() < 1 || !(Math.abs(v.x-capstone.get(0).x)/input.width() < 0.1)) {

@@ -10,9 +10,9 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.vision.SimpleBlueVisionYCbCr;
-import org.firstinspires.ftc.teamcode.vision.SimpleExtraVisionYCbCr;
-import org.firstinspires.ftc.teamcode.vision.SimpleRedVisionYCbCr;
+import org.firstinspires.ftc.teamcode.vision_old.SimpleBlueVisionYCbCr;
+import org.firstinspires.ftc.teamcode.vision_old.SimpleExtraVisionYCbCr;
+import org.firstinspires.ftc.teamcode.vision_old.SimpleRedVisionYCbCr;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;

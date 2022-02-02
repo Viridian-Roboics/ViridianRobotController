@@ -11,17 +11,17 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.vision.SimpleBlueVisionYCbCr;
-import org.firstinspires.ftc.teamcode.vision.SimpleExtraVisionYCbCr;
-import org.firstinspires.ftc.teamcode.vision.SimpleRedVisionYCbCr;
+import org.firstinspires.ftc.teamcode.vision_old.SimpleBlueVisionYCbCr;
+import org.firstinspires.ftc.teamcode.vision_old.SimpleExtraVisionYCbCr;
+import org.firstinspires.ftc.teamcode.vision_old.SimpleRedVisionYCbCr;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
-import org.openftc.easyopencv.OpenCvInternalCamera;
 
 public class CompBotW1 {
 
     public final static double distanceK = 384.5/(100*Math.PI)*25.4, corrCoeff = 0.05, corrCoeff2 = 1, dervCoeff = 0, intCoeff = 0;
+
 
     public DcMotor fl = null, fr = null, bl = null, br = null;
     public RevIMU imu = null;

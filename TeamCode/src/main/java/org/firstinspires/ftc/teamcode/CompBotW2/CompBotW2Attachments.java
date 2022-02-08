@@ -152,8 +152,8 @@ public class CompBotW2Attachments extends CompBotW2 {
 
     public void autonLift(boolean[] p, double dPower) {
 
-        AEncDrive(-3,0,-0.15,0,2000);
-        AEncDrive(22,0,dPower,0,1500);
+        //AEncDrive(-3,0,-0.15,0,2000);
+        //AEncDrive(6,0,dPower,0,1500);
         fixBucket();
         sleep(250);
         if (Arrays.equals(p, new boolean[]{true, false, false})) {// left
@@ -170,6 +170,7 @@ public class CompBotW2Attachments extends CompBotW2 {
         sleep(250);
         zeroLift();
         AEncDrive(-22,0,dPower,0,2000);
+
     }
 
     private void sleep(int i) {

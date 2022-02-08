@@ -8,56 +8,51 @@ import org.firstinspires.ftc.teamcode.CompBotW2.CompBotW2Attachments;
 
 // Start blue storage side
 
-@Autonomous(name="Blue Carousel Side V2")
-public class BlueFarAutonV2 extends LinearOpMode {
+@Autonomous
+public class BlueFarAutonV25 extends LinearOpMode {
     public static final double dPower = 0.3;
     ElapsedTime runtime = new ElapsedTime();
     CompBotW2Attachments r = new CompBotW2Attachments();
 
     @Override
     public void runOpMode() {
-        r.init(hardwareMap,true, telemetry,"blue");
+        r.init(hardwareMap);
         telemetry.addLine("init finished");
         telemetry.update();
-        boolean[] pos = {false,false,false};
-        ElapsedTime e = new ElapsedTime();
-        while(!isStarted()) {
-            pos = r.p.getPositions(); // Detection
-        }
 
-        r.phoneCam.stopStreaming();
         r.setBucket(1);
+
+        waitForStart();
 
         runtime.reset();
 
         double heading = r.imu.getHeading();
 
-        // Strafe over to carousel
-        r.AEncDrive(18,21,0.15,0.2,3000);
+        r.AEncDrive(20,55,0.15,dPower,2000);
 
-        r.AEncDrive(-12,0,0.2,0,3000);
+        r.AEncDrive(-12,0,-dPower,0,2000);
 
-        // Align with initial heading
-        r.gyroTurnAbsolute(heading,0.2,1000);
+        r.spin(2500);
 
-        // Spin the duck
-        r.spin(1000);
-        sleep(1000);
+        r.AEncDrive(12,0,dPower,0,1500);
 
-        // Move over to Hub
-        r.AEncDrive(12,0,0.5,0,1000);
-        r.AEncDrive(-18,-52,-0.1,-dPower,4000);
+        r.AEncDrive(-8,0,-0.15,0,2000);
 
-        // Align with initial heading
-        r.gyroTurnAbsolute(heading,0.2,2000);
+        r.AEncDrive(0,-63,0,-dPower,5000);
 
-        //lift and drop
-        r.autonLift(pos,dPower);
+        r.gyroTurnAbsolute(heading,0.1,2000);
+
+        r.AEncDrive(3,0,dPower,0,2000);
+
+        r.autonLift(new boolean[]{false,true,false},0.2);
+
         telemetry.addLine("finished with lift");
         telemetry.update();
 
         // Drive to depot
         r.AEncDrive(32,55.5,0.3,0.8,5000);
+
+
 
         r.stop();
 

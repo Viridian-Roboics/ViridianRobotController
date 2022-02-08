@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.CompBotW2.CompBotW2Attachments;
 // Start blue storage side
 
 @Autonomous
-public class BlueFarAutonV25 extends LinearOpMode {
+public class RedFarAutonV25 extends LinearOpMode {
     public static final double dPower = 0.3;
     ElapsedTime runtime = new ElapsedTime();
     CompBotW2Attachments r = new CompBotW2Attachments();
@@ -28,17 +28,16 @@ public class BlueFarAutonV25 extends LinearOpMode {
 
         double heading = r.imu.getHeading();
 
-        r.AEncDrive(20,55,0.15,dPower,2000);
+        r.AEncDrive(25,-55,0.15,-dPower,2000);
 
         r.AEncDrive(-12,0,-dPower,0,2000);
 
-        r.spin(2500);
+        r.spinReverse(2500);
 
         r.AEncDrive(12,0,dPower,0,1500);
 
-        r.AEncDrive(-8,0,-0.15,0,2000);
 
-        r.AEncDrive(0,-63,0,-dPower,5000);
+        r.AEncDrive(0,63,0,dPower,5000);
 
         r.gyroTurnAbsolute(heading,0.1,2000);
 
@@ -52,7 +51,7 @@ public class BlueFarAutonV25 extends LinearOpMode {
         telemetry.update();
 
         // Drive to depot
-        r.AEncDrive(32,55.5,0.3,0.8,5000);
+        r.AEncDrive(28,-65.5,0.3,-0.8,5000);
 
 
 

@@ -136,6 +136,15 @@ public class CompBotW2Attachments extends CompBotW2 {
         spin0.setPower(0);
         spin1.setPower(0);
     }
+    public void spinReverse(long time) {
+        ElapsedTime e = new ElapsedTime();
+        while(e.milliseconds() < time) {
+            spin0.setPower(spinPower * .5);
+            spin1.setPower(spinPower * .5);
+        }
+        spin0.setPower(0);
+        spin1.setPower(0);
+    }
 
     public void lowLift() {
         setLiftPosition(liftZero+lowLift,1);
@@ -169,7 +178,6 @@ public class CompBotW2Attachments extends CompBotW2 {
         setBucket(1);
         sleep(250);
         zeroLift();
-        AEncDrive(-22,0,dPower,0,2000);
 
     }
 

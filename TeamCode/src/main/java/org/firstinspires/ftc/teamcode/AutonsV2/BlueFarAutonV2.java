@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.AutonsV2;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -9,6 +10,7 @@ import org.firstinspires.ftc.teamcode.CompBotW2.CompBotW2Attachments;
 // Start blue storage side
 
 @Autonomous(name="Blue Carousel Side V2")
+@Disabled
 public class BlueFarAutonV2 extends LinearOpMode {
     public static final double dPower = 0.3;
     ElapsedTime runtime = new ElapsedTime();

@@ -18,7 +18,7 @@ public class CompBotW2Attachments extends CompBotW2 {
 
     public final static int liftSafeAdder = 6300, liftMaxAdder = 10000;
     public int liftZero, liftSafe, liftMax;
-    public final static double spinPower = -1;
+    public final static double spinPower = 0.5;
     public double bucketOpen = 0.25, bucketClosed = 1;
 
     public final static int lowLift = 1400, medLift = 3600, highLift = 6300;
@@ -130,8 +130,8 @@ public class CompBotW2Attachments extends CompBotW2 {
     public void spin(long time) {
         ElapsedTime e = new ElapsedTime();
         while(e.milliseconds() < time) {
-            spin0.setPower(-spinPower * .5);
-            spin1.setPower(-spinPower * .5);
+            spin0.setPower(spinPower);
+            spin1.setPower(spinPower);
         }
         spin0.setPower(0);
         spin1.setPower(0);
@@ -139,8 +139,8 @@ public class CompBotW2Attachments extends CompBotW2 {
     public void spinReverse(long time) {
         ElapsedTime e = new ElapsedTime();
         while(e.milliseconds() < time) {
-            spin0.setPower(spinPower * .5);
-            spin1.setPower(spinPower * .5);
+            spin0.setPower(-spinPower);
+            spin1.setPower(-spinPower);
         }
         spin0.setPower(0);
         spin1.setPower(0);

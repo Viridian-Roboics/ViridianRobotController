@@ -52,6 +52,7 @@ public class CompBotW2Finite extends CompBotW2Attachments {
         br.setPower(0);
         useEncoders(); // Switch back to normal RUN_USING_ENCODERS velocity control mode
     }
+    /*
     public void AEncSimplified(double dForward, double dStrafe, double sForward, double sStrafe, long time) {
         // Set the target positions of each motor
         setDriveInches(dForward, dStrafe);
@@ -63,6 +64,7 @@ public class CompBotW2Finite extends CompBotW2Attachments {
         }
 
     }
+     */
 
     // Cycle-based lift movement
     public void setLiftEncoderRelative(int position) {

@@ -19,8 +19,8 @@ public class SimpleVisionYCbCr extends OpenCvPipeline {
     private final boolean[] left = {true, false, false}, middle = {false, true, false}, right = {false, false, true}, failsafe = right;
 
     public final Scalar[] blueColor = {new Scalar(0,101,140,0), new Scalar(255,125,175,255)};
-    public final Scalar[] redColor = {new Scalar(0,172,105,0), new Scalar(255,196,116,255)};
-    public final Scalar[] capstoneColor = {new Scalar(0,80,86,0), new Scalar(255,95,107,255)};
+    public final Scalar[] redColor = {new Scalar(0,172,98,0), new Scalar(255,196,116,255)};
+    public final Scalar[] capstoneColor = {new Scalar(0,80,75,0), new Scalar(255,95,107,255)};
 
     public SimpleVisionYCbCr(Telemetry telemetry, Scalar[] tapeColor, Scalar[] capstoneColor) {
         this.telemetry = telemetry;
@@ -72,20 +72,7 @@ public class SimpleVisionYCbCr extends OpenCvPipeline {
                     telemetry.addLine(v.toString());
                 }
             }
-        } // Telemetry for the driver
-        ArrayList<VisionObject> tapePotential2 = DetectionMethods.detectYCrCb(input, new Scalar(0,189,105,0), high, 0.05,
-                1,ymin, ymax,0.03,0.12,"tape"); // Detect the tape
-        for(VisionObject v : tapePotential2) {
-            if(capstone.size() < 1 || !(Math.abs(v.x-capstone.get(0).x)/input.width() < 0.1)) {
-                tape.add(v);
-                Imgproc.circle(input,new Point(v.x,v.y), (int) v.magSize(),new Scalar(255,0,0,0),5);
-                if(telemetry != null) {
-                    telemetry.addLine(v.toString());
-                }
-            }
-        } // Telemetry for the driver
-
-        tapePotential.addAll(tapePotential2);
+        }
 
         // Tape counting
         if(capstone.size() == 1 && tape.size() == 2) {

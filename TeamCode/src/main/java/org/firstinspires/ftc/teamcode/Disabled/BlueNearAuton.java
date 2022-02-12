@@ -1,20 +1,26 @@
-package org.firstinspires.ftc.teamcode.AutonsV2;
+package org.firstinspires.ftc.teamcode.Disabled;
+
+import static org.firstinspires.ftc.teamcode.Disabled.CompBotV3.CompBotV3.driveUntilMechStop;
+import static org.firstinspires.ftc.teamcode.Disabled.CompBotV3.CompBotV3.nEncDrive;
+import static org.firstinspires.ftc.teamcode.Disabled.CompBotV3.CompBotV3.runMotorTime;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.CompBotW2.CompBotW2Attachments;
+import org.firstinspires.ftc.teamcode.CompBotW1.CompBotW1Attachments;
+
+import java.util.Arrays;
 
 // Start blue storage side
 
-@Autonomous(name="Blue Carousel Side V2")
+@Autonomous(name="Blue Warehouse Side old")
 @Disabled
-public class BlueFarAutonV2 extends LinearOpMode {
-    public static final double dPower = 0.3;
+public class BlueNearAuton extends LinearOpMode {
+    public static final double dPower = 0.35;
     ElapsedTime runtime = new ElapsedTime();
-    CompBotW2Attachments r = new CompBotW2Attachments();
+    CompBotW1Attachments r = new CompBotW1Attachments();
 
     @Override
     public void runOpMode() {
@@ -24,42 +30,30 @@ public class BlueFarAutonV2 extends LinearOpMode {
         boolean[] pos = {false,false,false};
         ElapsedTime e = new ElapsedTime();
         while(!isStarted()) {
-            pos = r.p.getPositions(); // Detection
+            pos = r.p.getPositions();
         }
 
         r.phoneCam.stopStreaming();
-        r.setBucket(1);
 
         runtime.reset();
 
-        double heading = r.imu.getHeading();
+        r.setBucket(1);
 
-        // Strafe over to carousel
-        r.AEncDrive(18,21,0.15,0.2,3000);
-
-        r.AEncDrive(-12,0,0.2,0,3000);
-
-        // Align with initial heading
-        r.gyroTurnAbsolute(heading,0.2,1000);
-
-        // Spin the duck
-        r.spin(1000);
-        sleep(1000);
-
-        // Move over to Hub
-        r.AEncDrive(12,0,0.5,0,1000);
-        r.AEncDrive(-18,-52,-0.1,-dPower,4000);
-
-        // Align with initial heading
-        r.gyroTurnAbsolute(heading,0.2,2000);
+        // line up with drop
+        r.AEncDrive(0,22,0,dPower,3000);
 
         //lift and drop
         r.autonLift(pos,dPower);
         telemetry.addLine("finished with lift");
         telemetry.update();
 
-        // Drive to depot
-        r.AEncDrive(32,55.5,0.3,0.8,5000);
+
+        // Strafe to warehouse
+        r.gyroTurn(270,0.2,2000);
+        telemetry.addLine("finished with turn");
+        telemetry.update();
+        r.AEncDrive(0,15,0,0.15,2000); // bang into wall
+        r.AEncDrive(-60,15,-1,0.1);
 
         r.stop();
 

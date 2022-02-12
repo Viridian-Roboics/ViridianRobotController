@@ -18,7 +18,7 @@ public class CompBotW2Attachments extends CompBotW2 {
 
     public final static int liftSafeAdder = 6300, liftMaxAdder = 10000;
     public int liftZero, liftSafe, liftMax;
-    public final static double spinPower = 0.5;
+    public final static double spinPower = 0.3;
     public double bucketOpen = 0.25, bucketClosed = 1;
 
     public final static int lowLift = 1400, medLift = 3600, highLift = 6300;
@@ -169,6 +169,32 @@ public class CompBotW2Attachments extends CompBotW2 {
             lowLift();
         } else if (Arrays.equals(p, new boolean[]{false, true, false})) {// middle
             medLift();
+        } else {// right
+            highLift();
+        }
+        setBucket(0.25);
+        sleep(500);
+        fixBucket();
+        setBucket(1);
+        sleep(250);
+        zeroLift();
+
+    }
+
+    public void autonLift(boolean[] p, double dPower, Telemetry telemetry) {
+
+        //AEncDrive(-3,0,-0.15,0,2000);
+        //AEncDrive(6,0,dPower,0,1500);
+        fixBucket();
+        sleep(250);
+        if (Arrays.equals(p, new boolean[]{true, false, false})) {// left
+            lowLift();
+            telemetry.addLine("your mom's gay");
+            telemetry.update();
+        } else if (Arrays.equals(p, new boolean[]{false, true, false})) {// middle
+            medLift();
+            telemetry.addLine("your dad's dead");
+            telemetry.update();
         } else {// right
             highLift();
         }

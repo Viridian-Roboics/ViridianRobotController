@@ -22,8 +22,9 @@ public class CompBotW2 {
     public final static double distanceK = 384.5/(100*Math.PI)*25.4, corrCoeff = 0.05, corrCoeff2 = 1, dervCoeff = 0, intCoeff = 0;
 
     public final Scalar[] blueColor = {new Scalar(0,101,140,0), new Scalar(255,125,175,255)};
-    public final Scalar[] redColor = {new Scalar(0,175,105,0), new Scalar(255,187,116,255)};
-    public final Scalar[] capstoneColor = {new Scalar(0,80,86,0), new Scalar(255,95,107,255)};
+    public final Scalar[] redColor = {new Scalar(0,172,98,0), new Scalar(255,196,116,255)};
+    public final Scalar[] capstoneColor = {new Scalar(0,80,75,0), new Scalar(255,95,107,255)};
+
 
     public DcMotor fl = null, fr = null, bl = null, br = null;
     public RevIMU imu = null;
@@ -119,6 +120,45 @@ public class CompBotW2 {
             } else { br.setPower(MathUtils.clamp((br.getCurrentPosition()-br.getTargetPosition() < 0 ? -1 : 1)*-1*totalError,-1,1));
             }
             pastError = error; // Move error into pastError for next loop
+        }
+        fl.setPower(0);
+        fr.setPower(0);
+        bl.setPower(0);
+        br.setPower(0);
+        useEncoders(); // Switch back to normal RUN_USING_ENCODERS velocity control mode
+    }
+    public void AEncDrive(double dForward, double dStrafe, double sForward, double sStrafe, long time, Telemetry telemetry) { // d = distance, s = speed
+        // Set the target positions of each motor
+        fl.setTargetPosition(fl.getCurrentPosition() + (int) -(distanceK*(dForward+dStrafe))); // distanceK is a conversion factor to convert linear distance to motor clicks;
+        fr.setTargetPosition(fr.getCurrentPosition() + (int) (distanceK*(dForward-dStrafe))); // The distance each wheel needs to travel is just the sum of the
+        bl.setTargetPosition(bl.getCurrentPosition() + (int) -(distanceK*(dForward-dStrafe))); // distances the wheel would need to travel to do the strafing and
+        br.setTargetPosition(br.getCurrentPosition() + (int) (distanceK*(dForward+dStrafe))); // forward/back distances separately
+        runToPositionMode(); // Set motors to RUN_TO_POSITION mode - they will automatically spin in the direction of the set position
+        double initialHeading = imu.getHeading(); // Create variables for the gyro correction, and measure the initial angle the robot is facing
+        double pastError = 0, intError = 0;
+        ElapsedTime e = new ElapsedTime();
+        ElapsedTime total = new ElapsedTime();
+        while((fl.isBusy() || fr.isBusy() || bl.isBusy() || br.isBusy()) && total.milliseconds() < time) {
+            double elapsedTime = e.milliseconds();
+            e.reset(); // Reset the timer
+            double error = imu.getHeading() - initialHeading; // Calculate the deviation from the initial angle of the robot using the gyro
+            double dervError = (error-pastError)/elapsedTime; // Calculate the derivative = rate of change of the error
+            intError += error*elapsedTime; // Calculate the integral = sum over time of error
+            double totalError = (corrCoeff*error + dervCoeff*dervError + intCoeff*intError); // Sum the errors and apply coefficients
+            if(fl.isBusy()) { fl.setPower(-(sForward + sStrafe + totalError)); // DCMotor.isBusy is a boolean variable signifying whether the motor has finished moving to the position
+            } else { fl.setPower(MathUtils.clamp((fl.getCurrentPosition()-fl.getTargetPosition() < 0 ? -1 : 1)*totalError, -1, 1));
+            }if(fr.isBusy()) { fr.setPower(sForward - sStrafe - totalError); // This code looks complicated but it's simple
+            } else { fr.setPower(MathUtils.clamp((fr.getCurrentPosition()-fr.getTargetPosition() < 0 ? -1 : 1)*-1*totalError,-1,1));
+            }if(bl.isBusy()) { bl.setPower(-(sForward - sStrafe + totalError)); // If the motor is not finished, apply the given speed + a correction based on the angle error
+            } else { bl.setPower(MathUtils.clamp((bl.getCurrentPosition()-bl.getTargetPosition() < 0 ? -1 : 1)*totalError,-1,1));
+            } if(br.isBusy()) { br.setPower(sForward + sStrafe - totalError); // If the motor is finished, apply only the correction (flip flops signs because we're in RUN_TO_POSITION mode)
+            } else { br.setPower(MathUtils.clamp((br.getCurrentPosition()-br.getTargetPosition() < 0 ? -1 : 1)*-1*totalError,-1,1));
+            }
+            pastError = error; // Move error into pastError for next loop
+        }
+        if(total.milliseconds() > time) {
+            telemetry.addLine("time cutoff");
+            telemetry.update();
         }
         fl.setPower(0);
         fr.setPower(0);

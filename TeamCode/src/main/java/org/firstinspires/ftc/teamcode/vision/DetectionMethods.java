@@ -51,7 +51,7 @@ public class DetectionMethods {
                     Math.sqrt(Math.pow(mask.width(),2)+Math.pow(mask.height(),2))*maxSize)) {
                 boolean exists = false;
                 for(VisionObject a : v) {
-                    if(within(x, a.x - mask.width() * 0.1, a.x + mask.width() + 0.1) && within(y, a.y - mask.height() * 0.1, a.y + mask.height() + 0.1)) {
+                    if(within(x, a.x - a.magSize(), a.x + a.magSize()) && within(y, a.y - a.magSize(), a.y + a.magSize())) {
                         exists = true;
                     }
                 }

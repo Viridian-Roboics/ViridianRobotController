@@ -32,9 +32,9 @@ public class RedFarAutonV35 extends LinearOpMode {
 
         double heading = r.imu.getHeading();
 
-        r.AEncDrive(15,-40,dPower/2,-dPower,2500, telemetry);
+        r.AEncDrive(15,-43,dPower/2,-dPower,2500, telemetry);
 
-        r.AEncDrive(-12,0,-0.15,0,1000);
+        r.AEncDrive(-14,0,-0.15,0,1000);
 
         r.spinReverse(2000);
 
@@ -44,9 +44,9 @@ public class RedFarAutonV35 extends LinearOpMode {
 
         r.gyroTurnAbsolute(heading,0.1,2000);
 
-        r.AEncDrive(0,63,0,dPower,4000);
+        r.AEncDrive(0,64,0,dPower-.1,4500);
 
-        r.AEncDrive(7,0,dPower-.2,0,2500);
+        r.AEncDrive(7,0,dPower-.4,0,3000);
 
         r.autonLift(pos,0.2);
 
@@ -56,7 +56,7 @@ public class RedFarAutonV35 extends LinearOpMode {
         telemetry.update();
 
         // Drive to depot
-        r.AEncDrive(30,-55.5,0.3,-0.8,5000);
+        r.AEncDrive(28,-63,0.3,-0.8,5000);
 
 
 

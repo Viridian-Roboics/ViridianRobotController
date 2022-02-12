@@ -35,11 +35,11 @@ public class BlueNearAutonV2 extends LinearOpMode {
         r.setBucket(1);
 
         // line up with drop
-        r.AEncDrive(0,22,0,dPower,3000);
+        r.AEncDrive(0,24.5,0,dPower-.2,4000);
 
         r.AEncDrive(-3,0,-0.15,0,1500);
 
-        r.AEncDrive(20,0,dPower,0,2000);
+        r.AEncDrive(22.5,0,dPower-.25,0,3500);
 
         //lift and drop
         telemetry.addLine(Arrays.toString(pos));

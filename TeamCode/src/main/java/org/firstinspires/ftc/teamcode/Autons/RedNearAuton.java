@@ -39,7 +39,7 @@ public class RedNearAuton extends LinearOpMode {
         r.setBucket(1);
 
         // line up with drop
-        r.AEncDrive(0,-30,0,-dPower,3000);
+        r.AEncDrive(0,-32,0,-dPower,3000);
 
         r.AEncDrive(-3,0,-0.15,0,1500);
 

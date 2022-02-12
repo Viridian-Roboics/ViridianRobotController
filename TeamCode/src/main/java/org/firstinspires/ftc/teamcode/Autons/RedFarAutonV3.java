@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Autons;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -8,7 +9,8 @@ import org.firstinspires.ftc.teamcode.CompBotW2.CompBotW2Attachments;
 
 // Start blue storage side
 
-@Autonomous(name="Red Carousel Side")
+@Autonomous(name="Red Carousel Side old2")
+@Disabled
 public class RedFarAutonV3 extends LinearOpMode {
     public static final double dPower = 0.6;
     ElapsedTime runtime = new ElapsedTime();
@@ -16,7 +18,7 @@ public class RedFarAutonV3 extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        r.init(hardwareMap,true, telemetry,"blue");
+        r.init(hardwareMap,true, telemetry,"red");
         telemetry.addLine("init finished");
         telemetry.update();
         boolean[] pos = {false,false,false};

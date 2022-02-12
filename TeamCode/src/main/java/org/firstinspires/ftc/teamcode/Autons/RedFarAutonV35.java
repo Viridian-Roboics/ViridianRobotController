@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.CompBotW2.CompBotW2Attachments;
 
 // Start blue storage side
 
-@Autonomous(name="Blue Carousel Side")
+@Autonomous(name="Red Carousel Side")
 public class RedFarAutonV35 extends LinearOpMode {
     public static final double dPower = 0.6;
     ElapsedTime runtime = new ElapsedTime();
@@ -16,7 +16,7 @@ public class RedFarAutonV35 extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        r.init(hardwareMap,true, telemetry,"blue");
+        r.init(hardwareMap,true, telemetry,"red");
         telemetry.addLine("init finished");
         telemetry.update();
         boolean[] pos = {false,false,false};
@@ -32,11 +32,11 @@ public class RedFarAutonV35 extends LinearOpMode {
 
         double heading = r.imu.getHeading();
 
-        r.AEncDrive(15,-35,dPower/2,-dPower,2500, telemetry);
+        r.AEncDrive(15,-40,dPower/2,-dPower,2500, telemetry);
 
         r.AEncDrive(-12,0,-0.15,0,1000);
 
-        r.spin(2000);
+        r.spinReverse(2000);
 
         r.AEncDrive(4,0,0.15,0,600);
 

@@ -1,17 +1,15 @@
 package org.firstinspires.ftc.teamcode;
 
-import static android.os.SystemClock.sleep;
-
 import com.arcrobotics.ftclib.util.InterpLUT;
 import com.arcrobotics.ftclib.util.MathUtils;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp(name="Drive Software")
+@TeleOp(name="Old Drive Software")
 
-public class F0teleopv2 extends OpMode {
-    F0HardwareSteeringWithGyro f = new F0HardwareSteeringWithGyro();
+public class Teleop_old extends OpMode {
+    F0Hardware f = new F0Hardware();
 
     double[] maxP = new double[] {.1, .25, .5, .75, .9};
     int powerIndex = 0;

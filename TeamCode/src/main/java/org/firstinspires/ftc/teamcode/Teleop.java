@@ -1,20 +1,17 @@
 package org.firstinspires.ftc.teamcode;
 
-import android.graphics.drawable.GradientDrawable;
-
-import com.arcrobotics.ftclib.util.InterpLUT;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import java.util.Arrays;
 
 @TeleOp
 public class Teleop extends OpMode {
     enum Drive_Modes {
         ECO_MODE,
         SPORT_MODE,
-        N_WORD
+        N_MODE
     }
 
     enum Gyro_Modes {
@@ -28,6 +25,8 @@ public class Teleop extends OpMode {
     Drive_Modes dm = Drive_Modes.ECO_MODE;
     Gyro_Modes gm = Gyro_Modes.TURN;
 
+    boolean powerCut = false;
+
     ElapsedTime e;
     ElapsedTime powerCutTimer;
     boolean first = false;
@@ -35,13 +34,15 @@ public class Teleop extends OpMode {
 
     @Override
     public void init() {
+        e = new ElapsedTime();
+        powerCutTimer = new ElapsedTime();
         r.init(hardwareMap);
         telemetry.addLine("imu reset in progress...");
         telemetry.update();
         r.imu.reset();
         telemetry.addLine("imu reset finished ^_^");
         telemetry.update();
-        angleCorrector = new PID(new double[]{0.05,0,0}, r.imu.getHeading());
+        angleCorrector = new PID(new double[]{0.025,0,0.1}, r.imu.getHeading());
         prevAngles = r.imu.getAngles();
         telemetry.addLine("completely finished with init ^o^");
         telemetry.update();
@@ -53,13 +54,27 @@ public class Teleop extends OpMode {
         double accelInput = gamepad1.right_trigger - gamepad1.left_trigger;
         double steerInput = gamepad1.left_stick_x;
 
+        switch(dm) {
+            case ECO_MODE:
+                accelInput *= 0.25;
+                telemetry.addLine("Eco Mode");
+                break;
+            case SPORT_MODE:
+                accelInput *= 0.6;
+                telemetry.addLine("Sport Mode");
+                break;
+            case N_MODE:
+                telemetry.addLine("N Mode");
+                break;
+        }
+
         // Drive mode changing
         if(gamepad1.b) {
             dm = Drive_Modes.ECO_MODE;
         } else if(gamepad1.x) {
             dm = Drive_Modes.SPORT_MODE;
         } else if(gamepad1.y) {
-            dm = Drive_Modes.N_WORD;
+            dm = Drive_Modes.N_MODE;
         }
 
         // Handbrake
@@ -67,13 +82,20 @@ public class Teleop extends OpMode {
             accelInput = -1*Math.signum(accelInput);
         }
 
-        double angPowerAdder = 0, lp = 0, rp = 0;
+        double angPowerAdder = 0, lp, rp;
 
         // Gyro angle correction
         if (gm == Gyro_Modes.DRIVE_STRAIGHT) {
             angPowerAdder = angleCorrector.calculate(angles[0]);
-            lp = accelInput + angPowerAdder;
-            rp = accelInput - angPowerAdder;
+            lp = accelInput;
+            rp = accelInput;
+            if(accelInput > 0.05) {
+                lp += angPowerAdder;
+                rp -= angPowerAdder;
+            }
+            if(Math.abs(steerInput) > 0.03) {
+                gm = Gyro_Modes.TURN;
+            }
         } else {
             angleCorrector.setRefVal(angles[0]);
             lp = accelInput*(1-0.7*steerInput);
@@ -83,29 +105,18 @@ public class Teleop extends OpMode {
             }
         }
 
-        switch(dm) {
-            case ECO_MODE:
-                lp *= 0.25;
-                rp *= 0.25;
-                telemetry.addLine("Eco Mode");
-                break;
-            case SPORT_MODE:
-                lp *= 0.6;
-                rp *= 0.6;
-                telemetry.addLine("Sport Mode");
-                break;
-            case N_WORD:
-                telemetry.addLine("N Word");
-                break;
-        }
+
 
         // Roll-protection
+        /*
         if(first || powerCutTimer.milliseconds() < 30) {
+            powerCut = true;
             lp = 0;
             rp = 0;
             prevAngles = angles;
             e.reset();
         } else {
+            powerCut = false;
             double dt = e.milliseconds();
             e.reset();
             if(Math.abs(angles[1] - prevAngles[1])/dt > 0.01 || Math.abs(angles[2] - prevAngles[2])/dt > 0.01) {
@@ -113,21 +124,23 @@ public class Teleop extends OpMode {
             }
         }
 
+         */
+
         r.left.setPower(lp);
         r.right.setPower(rp);
 
         // Steering
-        InterpLUT servoPosition = new InterpLUT();
-        servoPosition.add(-1.01,-1);
-        servoPosition.add(0,0);
-        servoPosition.add(1.01, 1);
-        servoPosition.createLUT();
-        InterpLUT speedCorrection = new InterpLUT();
-        speedCorrection.add(-0.01,1);
-        speedCorrection.add(1.01, 0.2);
-        speedCorrection.createLUT();
-        double tAng = servoPosition.get(steerInput)*speedCorrection.get(Math.abs(steerInput));
-        r.steer.turnToAngle((tAng));
+        r.steer(steerInput*(1-0.7*accelInput));
+
+        double[] dA = new double[3];
+        for(int i = 0; i < 3; i++) {
+            dA[i] = angles[i] - prevAngles[i];
+        }
+
+        telemetry.addData("Angles:", Arrays.toString(angles));
+        telemetry.addData("dA: ",Arrays.toString(dA));
+        telemetry.addData("angPowerAdder:",angPowerAdder);
+        telemetry.addLine(String.valueOf(powerCut));
 
         telemetry.update();
     }

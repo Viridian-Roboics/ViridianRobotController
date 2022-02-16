@@ -187,8 +187,8 @@ public class Teleop_old extends OpMode {
         speedCorrection.add(-0.01,1);
         speedCorrection.add(1.01, 0.2);
         speedCorrection.createLUT();
-        double tAng = servoPosition.get(turn)*speedCorrection.get(Math.abs(accel));
-        f.steer.turnToAngle((tAng+turnTrim));
+        // Steering
+        f.steer(turn*(1-0.7*turn));
 
         telemetry.addData("Top Speed Reached (mph)", (f.imu.getRevIMU().getVelocity().xVeloc)*2.2);
 

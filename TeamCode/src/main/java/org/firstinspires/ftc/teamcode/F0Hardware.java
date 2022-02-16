@@ -3,14 +3,16 @@ package org.firstinspires.ftc.teamcode;
 import com.arcrobotics.ftclib.hardware.RevIMU;
 import com.arcrobotics.ftclib.hardware.ServoEx;
 import com.arcrobotics.ftclib.hardware.SimpleServo;
+import com.arcrobotics.ftclib.util.InterpLUT;
 import com.qualcomm.robotcore.hardware.CRServoImplEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PwmControl;
+import com.qualcomm.robotcore.hardware.Servo;
 
 public class F0Hardware {
     public CRServoImplEx left, right;
-    public ServoEx steer;
+    public Servo steer;
     public RevIMU imu;
 
 
@@ -32,9 +34,8 @@ public class F0Hardware {
 
         // Servo setup
 
-        steer = new SimpleServo(h, "steer", -10, 10);
+        steer = h.get(Servo.class, "steer");
 
-        steer.turnToAngle(0);
 
         // IMU
 
@@ -44,6 +45,19 @@ public class F0Hardware {
     public void stop() {
         left.setPower(0);
         right.setPower(0);
-        steer.turnToAngle(0);
+    }
+    public void steer(double pos) {
+        if(pos > 1) {
+            pos = 1;
+        }
+        if(pos < -1) {
+            pos = -1;
+        }
+        InterpLUT steerLUT = new InterpLUT();
+        steerLUT.add(-1.01,0);
+        steerLUT.add(0,0.11);
+        steerLUT.add(1.01, 0.5);
+        steerLUT.createLUT();
+        steer.setPosition(steerLUT.get(-1*pos));
     }
 }

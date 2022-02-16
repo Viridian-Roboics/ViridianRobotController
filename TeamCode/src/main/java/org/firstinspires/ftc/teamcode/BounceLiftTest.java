@@ -14,10 +14,10 @@ public class BounceLiftTest extends LinearOpMode {
         r.init(hardwareMap);
         waitForStart();
         r.fixBucket();
-        r.highLift();
+        r.medLift();
         r.setBucket(0.25);
         sleep(1000);
-        r.setBucket(1);
+        r.fixBucket();
         r.zeroLift();
     }
 }

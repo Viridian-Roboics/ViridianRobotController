@@ -51,7 +51,7 @@ public class Teleop extends OpMode {
     public void loop() {
         double[] angles = r.imu.getAngles();
 
-        double accelInput = gamepad1.right_trigger - gamepad1.left_trigger;
+        double accelInput = gamepad1.right_trigger - 0.4*gamepad1.left_trigger;
         double steerInput = gamepad1.left_stick_x;
 
         switch(dm) {

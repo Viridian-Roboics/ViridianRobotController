@@ -1,14 +1,16 @@
-package org.firstinspires.ftc.teamcode.Teleops;
+package org.firstinspires.ftc.teamcode.Disabled;
 
 import androidx.core.math.MathUtils;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.CompBotW1.CompBotW1Attachments;
 import org.firstinspires.ftc.teamcode.Disabled.CompBotV3.CompBotV3;
 
-@TeleOp(name="Viridian Competition Teleop")
+@TeleOp(name="Viridian Competition Teleop old")
+@Disabled
 public class Teleop2p extends OpMode {
     CompBotW1Attachments r = new CompBotW1Attachments();
     double initialHeading, error;

@@ -1,12 +1,14 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Disabled;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.CompBotW2.CompBotW2Attachments;
 
 @TeleOp
-public class arush_mode extends OpMode {
+@Disabled
+public class Servo1pos extends OpMode {
     CompBotW2Attachments r = new CompBotW2Attachments();
     @Override
     public void init() {
@@ -15,10 +17,6 @@ public class arush_mode extends OpMode {
 
     @Override
     public void loop() {
-        if(gamepad1.right_bumper) {
-            r.setBucket(0);
-        } else {
-            r.setBucket(1);
-        }
+        r.setBucket(1);
     }
 }

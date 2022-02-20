@@ -1,12 +1,14 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Disabled;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.CompBotW1.CompBotW1Attachments;
 
 @Autonomous
-public class LiftTest extends LinearOpMode {
+@Disabled
+public class LiftTest2 extends LinearOpMode {
     CompBotW1Attachments r = new CompBotW1Attachments();
     @Override
     public void runOpMode() throws InterruptedException {

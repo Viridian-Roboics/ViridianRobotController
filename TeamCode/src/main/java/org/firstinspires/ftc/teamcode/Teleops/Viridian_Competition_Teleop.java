@@ -185,7 +185,7 @@ public class Viridian_Competition_Teleop extends LinearOpMode {
     public void attachments(){
         // Intake, spin
         r.intake.setPower((gamepad1.a?1:0) - (gamepad1.b?1:0));
-        double spinPower = MathUtils.clamp(1.3*(gamepad1.right_trigger-gamepad1.left_trigger),-1,1);
+        double spinPower = MathUtils.clamp(1.3*Math.max(gamepad1.right_trigger-gamepad1.left_trigger, gamepad2.right_trigger-gamepad2.left_trigger),-1,1);
         r.spin0.setPower(spinPower);
         r.spin1.setPower(spinPower);
 

@@ -54,9 +54,9 @@ public class F0Hardware {
             pos = -1;
         }
         InterpLUT steerLUT = new InterpLUT();
-        steerLUT.add(-1.01,0);
-        steerLUT.add(0,0.11);
-        steerLUT.add(1.01, 0.5);
+        steerLUT.add(-1.01,0.35);
+        steerLUT.add(0,0.525);
+        steerLUT.add(1.01, 0.7);
         steerLUT.createLUT();
         steer.setPosition(steerLUT.get(-1*pos));
     }

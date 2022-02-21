@@ -69,7 +69,6 @@ public class Viridian_Competition_Teleop extends LinearOpMode {
             drive();
             attachments();
 
-            telemetry.addLine(String.valueOf(gamepad1.a));
             telemetry.addData("BucketPos", r.bs);
             telemetry.addData("liftPos", r.getLiftPos());
             telemetry.addData("Drive mode", dm);
@@ -143,21 +142,21 @@ public class Viridian_Competition_Teleop extends LinearOpMode {
             }
         }
          else {
+            double powerMultiplier = modePowers.get(dm);
              dm = pdm;
-             y = gamepad2.left_stick_y;
-             x = -1 * gamepad2.left_stick_x;
-             turn = -1 * gamepad2.right_stick_x;
+             y = gamepad2.left_stick_y * powerMultiplier;
+             x = -1 * gamepad2.left_stick_x * powerMultiplier;
+             turn = -1 * gamepad2.right_stick_x * powerMultiplier;
+            y = (Math.abs(y)>0.05 ? y : 0);
+            x = (Math.abs(x)>0.05 ? x : 0);
+            turn = (Math.abs(turn)>0.05 ? turn : 0);
+            if(Math.abs(y) > Math.abs(x)) {
+                x = 0;
+            } else {
+                y = 0;
+            }
         }
-        // Actual drive
-        y = (Math.abs(y)>0.05 ? y : 0);
-        x = (Math.abs(x)>0.05 ? x : 0);
-        turn = (Math.abs(turn)>0.05 ? turn : 0);
 
-        if(Math.abs(y) > Math.abs(x)) {
-            x = 0;
-        } else {
-            y = 0;
-        }
         if (Math.abs(turn) < 0.1 && Math.abs(x) > 0 && Math.abs(y) > 0) {
             if(!headingReset) {
                 initialHeading = r.imu.getHeading();
@@ -169,19 +168,18 @@ public class Viridian_Competition_Teleop extends LinearOpMode {
         } else {
             headingReset = false;
         }
+        r.fl.setPower(MathUtils.clamp(y+x+turn ,-1,1));
+        r.fr.setPower(MathUtils.clamp(-(y-x-turn),-1,1));
+        r.bl.setPower(MathUtils.clamp(y-x+turn,-1,1));
+        r.br.setPower(MathUtils.clamp(-(y+x-turn),-1,1));
 
-        double powerMultiplier = modePowers.get(dm);
-        r.fl.setPower(MathUtils.clamp(y+x+turn ,-1,1)*powerMultiplier);
-        r.fr.setPower(MathUtils.clamp(-(y-x-turn),-1,1)*powerMultiplier);
-        r.bl.setPower(MathUtils.clamp(y-x+turn,-1,1)*powerMultiplier);
-        r.br.setPower(MathUtils.clamp(-(y+x-turn),-1,1)*powerMultiplier);
 
         // IMU Reset
         if(gamepad2.back) {
             r.imu.reset();
         }
     }
-
+    boolean azalPressed = false;
     public void attachments(){
         // Intake, spin
         r.intake.setPower((gamepad1.a?1:0) - (gamepad1.b?1:0));
@@ -211,6 +209,9 @@ public class Viridian_Competition_Teleop extends LinearOpMode {
         } else {
             r.restBucket();
         }
+
+        // Azal Servo
+        r.azalServo.setPosition(MathUtils.clamp(r.azalServo.getPosition() + 0.02*gamepad1.right_stick_y,0,1));
     }
 
 }

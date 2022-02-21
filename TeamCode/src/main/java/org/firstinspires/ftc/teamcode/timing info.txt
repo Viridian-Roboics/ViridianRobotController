@@ -1,0 +1,5 @@
+Zero to low 0.9s
+Zero to med 1.9s
+Zero to high 3.1s
+High to low 2.4s
+High to med 1.4s

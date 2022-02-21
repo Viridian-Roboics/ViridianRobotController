@@ -42,7 +42,7 @@ public class Blue_Warehouse_Side_V3 extends LinearOpMode {
         //lift and drop
         telemetry.addLine(Arrays.toString(pos));
         telemetry.update();
-        r.autonLift(pos,dPower);
+        r.autonLift(pos);
         telemetry.addLine("finished with lift");
         telemetry.update();
 

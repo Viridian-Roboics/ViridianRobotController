@@ -48,7 +48,7 @@ public class Blue_Carousel_Side_V3 extends LinearOpMode {
 
         r.AEncDrive(13,0,0.2,3500);
 
-        r.autonLift(pos,0.2);
+        r.autonLift(pos);
 
         r.AEncDrive(-22,0,dPower,2000);
 

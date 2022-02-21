@@ -21,7 +21,7 @@ import java.util.Hashtable;
 1X: momentary switch for Azal servo
 1Up: lift up to top dump, 1Down: lift down, 1Y: lift up to bottom dump position
 1LB: Top dump, 1RB: Bottom dump
-1RT - 1LT: spin
+Maximum of 1RT - 1LT and 2RT - 2LT: spin
 1Back: reset lift zero (active during init)
 // Movement controls
 2LS + 2RSX: movement

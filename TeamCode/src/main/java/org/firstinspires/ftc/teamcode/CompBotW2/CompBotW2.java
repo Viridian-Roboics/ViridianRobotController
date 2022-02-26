@@ -91,6 +91,16 @@ public class    CompBotW2 {
         bl.setPower(0);
         br.setPower(0);
     }
+    public void drive(double x, double y, double turn) {
+        x=-x;
+        fl.setPower(MathUtils.clamp(y+x+turn ,-1,1));
+        fr.setPower(MathUtils.clamp(-(y-x-turn),-1,1));
+        bl.setPower(MathUtils.clamp(y-x+turn,-1,1));
+        br.setPower(MathUtils.clamp(-(y+x-turn),-1,1));
+    }
+    public void stopDrive() {
+        drive(0,0,0);
+    }
 
     public void AEncDrive(double dForward, double dStrafe, double sForward, double sStrafe, long time) { // d = distance, s = speed
         // Set the target positions of each motor

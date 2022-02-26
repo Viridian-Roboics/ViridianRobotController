@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Autons;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -8,9 +9,9 @@ import org.firstinspires.ftc.teamcode.CompBotW3.CompBotW3Attachments;
 
 import java.util.Arrays;
 
-@Autonomous
-public class Blue_Warehouse_Side_V3_ExampleOptimized extends LinearOpMode {
-    public static final double dPower = 0.6;
+@Autonomous(name="Red Warehouse Side New",group="New Autons")
+public class Red_Warehouse extends LinearOpMode {
+    public static final double dPower = 1;
     ElapsedTime runtime = new ElapsedTime();
     CompBotW3Attachments r = new CompBotW3Attachments();
 
@@ -34,13 +35,17 @@ public class Blue_Warehouse_Side_V3_ExampleOptimized extends LinearOpMode {
         // line up with drop
         r.lift.setPower(1);
 
-        r.AEncDrive(0,24.5,dPower-.2,3500);
+        r.AEncDriveLinearSlow(0,-32,dPower,3500);
 
         r.tempBucket();
 
-        r.AEncDrive(-3,0,0.15,1500);
+        ElapsedTime x = new ElapsedTime();
+        while(x.milliseconds() < 500) {
+            r.drive(0,-0.2,0);
+        }
+        r.stopDrive();
 
-        r.AEncDrive(22.5,0,0.3,3500);
+        r.AEncDriveLinearSlow(22.5,0,0.5,3500);
 
         //lift and drop
         telemetry.addLine(Arrays.toString(pos));
@@ -68,11 +73,16 @@ public class Blue_Warehouse_Side_V3_ExampleOptimized extends LinearOpMode {
         r.zeroLift();
 
         // Strafe to warehouse
-        r.gyroTurn(270,0.4,2000);
+        r.gyroTurn(90,0.4,2000);
         telemetry.addLine("finished with turn");
         telemetry.update();
-        r.AEncDrive(0,9,0.15,1000); // bang into wall
-        r.AEncDrive(-72,6,1, 3000);
+        x.reset();
+        while(x.milliseconds() < 500) {
+            r.drive(-0.2,0,0);
+        }
+        r.stopDrive();
+
+        r.AEncDrive(-72,-6,dPower, 3000);
 
         r.stop();
 

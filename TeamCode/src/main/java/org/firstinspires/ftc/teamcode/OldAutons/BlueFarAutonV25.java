@@ -1,21 +1,17 @@
-package org.firstinspires.ftc.teamcode.Disabled;
+package org.firstinspires.ftc.teamcode.OldAutons;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.CompBotW1.CompBotW1Attachments;
 import org.firstinspires.ftc.teamcode.CompBotW2.CompBotW2Attachments;
-
-import java.util.Arrays;
 
 // Start blue storage side
 
-@Autonomous
-@Disabled
-public class BlueNearAutonV2 extends LinearOpMode {
-    public static final double dPower = 0.6;
+@Autonomous(name="Blue Carousel Side",group="Old Autons")
+public class BlueFarAutonV25 extends LinearOpMode {
+    public static final double dPower = 1;
     ElapsedTime runtime = new ElapsedTime();
     CompBotW2Attachments r = new CompBotW2Attachments();
 
@@ -27,37 +23,47 @@ public class BlueNearAutonV2 extends LinearOpMode {
         boolean[] pos = {false,false,false};
         ElapsedTime e = new ElapsedTime();
         while(!isStarted()) {
-            pos = r.p.getPositions();
+            pos = r.p.getPositions(); // Detection
         }
 
         r.phoneCam.stopStreaming();
+        r.restBucket();
 
         runtime.reset();
 
-        r.setBucket(1);
+        double heading = r.imu.getHeading();
 
-        // line up with drop
-        r.AEncDrive(0,24.5,0,dPower-.2,4000);
+        double sqrt = Math.sqrt(Math.pow(15, 2) + Math.pow(35, 2));
+        r.AEncDrive(15,35,15* sqrt *dPower,35*sqrt *dPower,2500, telemetry);
 
-        r.AEncDrive(-3,0,-0.15,0,1500);
+        r.AEncDrive(-12,0,-0.15,0,1000);
 
-        r.AEncDrive(22.5,0,dPower-.25,0,3500);
+        r.spin(2000);
 
-        //lift and drop
-        telemetry.addLine(Arrays.toString(pos));
-        telemetry.update();
-        r.autonLift(pos,dPower,telemetry);
+        ElapsedTime x = new ElapsedTime();
+
+        r.AEncDrive(4,0,0.2,0,1000);
+
+        while(x.milliseconds() < 500) {
+            r.drive(0.2,0,0);
+        }
+
+        r.AEncDrive(0,-61,0,-0.7,4500);
+
+        r.AEncDrive(13,0,0.4,0,3500);
+
+        r.autonLift(pos);
+
+        r.AEncDrive(-22,0,-dPower,0,2000);
+
         telemetry.addLine("finished with lift");
         telemetry.update();
 
-        r.AEncDrive(-22,0,dPower,0,2500);
+        // Drive to depot
+        sqrt = Math.sqrt(Math.pow(28, 2) + Math.pow(55.5, 2));
+        r.AEncDrive(28,55.5,28/sqrt*dPower,55.5/sqrt*dPower,5000);
 
-        // Strafe to warehouse
-        r.gyroTurn(270,0.2,2000);
-        telemetry.addLine("finished with turn");
-        telemetry.update();
-        r.AEncDrive(0,9,0,0.15,1000); // bang into wall
-        r.AEncDrive(-72,6,-1,0.1, 3000);
+
 
         r.stop();
 

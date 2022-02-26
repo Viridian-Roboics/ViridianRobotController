@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Disabled;
+package org.firstinspires.ftc.teamcode.OldAutons;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -9,8 +9,7 @@ import org.firstinspires.ftc.teamcode.CompBotW2.CompBotW2Attachments;
 
 // Start blue storage side
 
-@Autonomous
-@Disabled
+@Autonomous(name="Red Carousel Side",group="Old Autons")
 public class RedFarAutonV35 extends LinearOpMode {
     public static final double dPower = 0.6;
     ElapsedTime runtime = new ElapsedTime();
@@ -28,7 +27,8 @@ public class RedFarAutonV35 extends LinearOpMode {
         }
 
         r.phoneCam.stopStreaming();
-        r.setBucket(1);
+        r.restBucket();
+
 
         runtime.reset();
 
@@ -50,7 +50,7 @@ public class RedFarAutonV35 extends LinearOpMode {
 
         r.AEncDrive(7,0,dPower-.4,0,3000);
 
-        r.autonLift(pos,0.2);
+        r.autonLift(pos);
 
         r.AEncDrive(-22,0,-dPower,0,2000);
 

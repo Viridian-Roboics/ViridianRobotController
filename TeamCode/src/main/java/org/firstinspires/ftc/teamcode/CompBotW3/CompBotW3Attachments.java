@@ -25,7 +25,6 @@ public class CompBotW3Attachments extends CompBotW3 {
     public final static int liftMaxAdder = 10000, lowLift = 1400, medLift = 3600, highLift = 6300;
     public int liftZero, liftSafe, liftMax;
     public final static double spinPower = 0.3;
-    public double bucketOpen = 0.25, bucketClosed = 1;
 
     private int liftHold;
     private boolean holding = false;
@@ -36,6 +35,10 @@ public class CompBotW3Attachments extends CompBotW3 {
 
     public void init(HardwareMap hardwareMap) {
         super.init(hardwareMap);
+        thisInit(hardwareMap);
+    }
+    public void init(HardwareMap hardwareMap, Telemetry telemetry) {
+        super.init(hardwareMap, telemetry);
         thisInit(hardwareMap);
     }
     public void init(HardwareMap hardwareMap, boolean cameraInit, Telemetry telemetry) {

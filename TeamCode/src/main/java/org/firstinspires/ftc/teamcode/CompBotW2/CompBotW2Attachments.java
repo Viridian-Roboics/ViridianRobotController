@@ -7,21 +7,25 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.CompBotW3.CompBotW3Attachments;
 
 import java.util.Arrays;
 
 public class CompBotW2Attachments extends CompBotW2 {
+    enum Bucket_States {
+        REST, TEMP, BOTTOM_DUMP, TOP_DUMP;
+    }
+
+    public Bucket_States bs = Bucket_States.REST;
+
     public DcMotor intake = null, lift = null;
 
-    public Servo bucket0, bucket1;
+    public Servo bucket0, bucket1, azalServo;
     public CRServo spin0, spin1;
 
-    public final static int liftSafeAdder = 6300, liftMaxAdder = 10000;
+    public final static int liftMaxAdder = 10000, lowLift = 1400, medLift = 3600, highLift = 6300;
     public int liftZero, liftSafe, liftMax;
     public final static double spinPower = 0.3;
-    public double bucketOpen = 0.25, bucketClosed = 1;
-
-    public final static int lowLift = 1400, medLift = 3600, highLift = 6300;
 
     private int liftHold;
     private boolean holding = false;
@@ -53,6 +57,7 @@ public class CompBotW2Attachments extends CompBotW2 {
         lift = hardwareMap.get(DcMotor.class, "lift");
         bucket0 = hardwareMap.get(Servo.class, "bucket0");
         bucket1 = hardwareMap.get(Servo.class, "bucket1");
+        azalServo = hardwareMap.get(Servo.class, "azalServo");
 
         intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -60,8 +65,8 @@ public class CompBotW2Attachments extends CompBotW2 {
         lift.setDirection(DcMotor.Direction.REVERSE);
 
         bucket0.setDirection(Servo.Direction.FORWARD);
-        bucket1.setDirection(Servo.Direction.FORWARD);
-        setBucket(1);
+        bucket1.setDirection(Servo.Direction.REVERSE);
+        azalServo.setDirection(Servo.Direction.REVERSE);
 
         intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
@@ -80,7 +85,6 @@ public class CompBotW2Attachments extends CompBotW2 {
     public void resetLift() {
         lift.setPower(0);
         liftZero = lift.getCurrentPosition();
-        liftSafe = liftZero+liftSafeAdder;
         liftMax = liftSafe+liftMaxAdder;
     }
     public int getLiftPos() {
@@ -120,11 +124,23 @@ public class CompBotW2Attachments extends CompBotW2 {
 
     public void setBucket(double position) {
         bucket0.setPosition(position);
-        bucket1.setPosition(1-position);
+        bucket1.setPosition(position);
     }
-    public void fixBucket() {
-        setLiftPosition(liftSafe, 1);
-        setBucket(0.45);
+    public void restBucket() {
+        setBucket(0.67);
+        bs = Bucket_States.REST;
+    }
+    public void tempBucket() {
+        setBucket(0.1);
+        bs = Bucket_States.TEMP;
+    }
+    public void topDumpBucket() {
+        setBucket(0);
+        bs = Bucket_States.BOTTOM_DUMP;
+    }
+    public void bottomDumpBucket() {
+        setBucket(1);
+        bs = Bucket_States.TOP_DUMP;
     }
 
     public void spin(long time) {
@@ -145,6 +161,10 @@ public class CompBotW2Attachments extends CompBotW2 {
         spin0.setPower(0);
         spin1.setPower(0);
     }
+    public void setSpin(double power) {
+        spin0.setPower(power);
+        spin1.setPower(power);
+    }
 
     public void lowLift() {
         setLiftPosition(liftZero+lowLift,1);
@@ -159,11 +179,9 @@ public class CompBotW2Attachments extends CompBotW2 {
         setLiftPosition(liftZero, 1);
     }
 
-    public void autonLift(boolean[] p, double dPower) {
-
-        //AEncDrive(-3,0,-0.15,0,2000);
-        //AEncDrive(6,0,dPower,0,1500);
-        fixBucket();
+    public void autonLift(boolean[] p) {
+        highLift();
+        tempBucket();
         sleep(250);
         if (Arrays.equals(p, new boolean[]{true, false, false})) {// left
             lowLift();
@@ -172,36 +190,10 @@ public class CompBotW2Attachments extends CompBotW2 {
         } else {// right
             highLift();
         }
-        setBucket(0.25);
+        topDumpBucket();
         sleep(500);
-        fixBucket();
-        setBucket(1);
-        sleep(250);
-        zeroLift();
-
-    }
-
-    public void autonLift(boolean[] p, double dPower, Telemetry telemetry) {
-
-        //AEncDrive(-3,0,-0.15,0,2000);
-        //AEncDrive(6,0,dPower,0,1500);
-        fixBucket();
-        sleep(250);
-        if (Arrays.equals(p, new boolean[]{true, false, false})) {// left
-            lowLift();
-            telemetry.addLine("your mom's gay");
-            telemetry.update();
-        } else if (Arrays.equals(p, new boolean[]{false, true, false})) {// middle
-            medLift();
-            telemetry.addLine("your dad's dead");
-            telemetry.update();
-        } else {// right
-            highLift();
-        }
-        setBucket(0.25);
-        sleep(500);
-        fixBucket();
-        setBucket(1);
+        highLift();
+        restBucket();
         sleep(250);
         zeroLift();
 

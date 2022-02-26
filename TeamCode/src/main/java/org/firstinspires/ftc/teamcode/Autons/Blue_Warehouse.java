@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Autons;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -8,9 +9,9 @@ import org.firstinspires.ftc.teamcode.CompBotW3.CompBotW3Attachments;
 
 import java.util.Arrays;
 
-@Autonomous
-public class Blue_Carousel_Side_V3_ExampleOptimized extends LinearOpMode {
-    public static final double dPower = 0.6;
+@Autonomous(name="Blue Warehouse Side New",group="New Autons")
+public class Blue_Warehouse extends LinearOpMode {
+    public static final double dPower = 1;
     ElapsedTime runtime = new ElapsedTime();
     CompBotW3Attachments r = new CompBotW3Attachments();
 
@@ -22,7 +23,7 @@ public class Blue_Carousel_Side_V3_ExampleOptimized extends LinearOpMode {
         boolean[] pos = {false,false,false};
         ElapsedTime e = new ElapsedTime();
         while(!isStarted()) {
-            pos = r.p.getPositions(); // Detection
+            pos = r.p.getPositions();
         }
 
         r.phoneCam.stopStreaming();
@@ -31,20 +32,24 @@ public class Blue_Carousel_Side_V3_ExampleOptimized extends LinearOpMode {
 
         runtime.reset();
 
-        double heading = r.imu.getHeading();
-
+        // line up with drop
         r.lift.setPower(1);
 
-        r.AEncDrive(15,35,dPower,2500); // Strafe over to wall
-
-        r.highLift();
-
-        r.AEncDrive(-12,0,0.15,1000); // Back into spinner
+        r.AEncDriveLinearSlow(0,24.5,dPower,3500);
 
         r.tempBucket();
 
-        ElapsedTime spinTimer = new ElapsedTime();
-        r.setSpin(1);
+        ElapsedTime x = new ElapsedTime();
+        while(x.milliseconds() < 500) {
+            r.drive(0,-0.2,0);
+        }
+        r.stopDrive();
+
+        r.AEncDriveLinearSlow(22.5,0,0.5,3500);
+
+        //lift and drop
+        telemetry.addLine(Arrays.toString(pos));
+        telemetry.update();
 
         if (Arrays.equals(pos, new boolean[]{true, false, false})) {// left
             r.lowLift();
@@ -53,44 +58,31 @@ public class Blue_Carousel_Side_V3_ExampleOptimized extends LinearOpMode {
         } else {// right
             r.highLift();
         }
-
-        while(spinTimer.milliseconds() < 2000) {
-            r.setSpin(1);
-        }
-
-        r.setSpin(0);
-
-        r.AEncDrive(4,0,0.15,600);
-
-        r.AEncDrive(0,4,0.2,1000);
-
-        r.gyroTurnAbsolute(heading,0.1,2000);
-
-        r.AEncDrive(0,-61,dPower-.15,4500);
-
-        r.AEncDrive(13,0,0.2,3500);
-
         r.topDumpBucket();
-
         sleep(500);
-
         r.highLift();
-
         r.restBucket();
 
         r.lift.setPower(-1);
 
-        r.AEncDrive(-22,0,dPower,2000);
-
-        r.lift.setPower(0);
-
         telemetry.addLine("finished with lift");
         telemetry.update();
 
-        // Drive to depot
-        r.AEncDrive(28,55.5,0.8,5000);
+        r.AEncDrive(-22,0,dPower,2500);
 
         r.zeroLift();
+
+        // Strafe to warehouse
+        r.gyroTurn(270,0.4,2000);
+        telemetry.addLine("finished with turn");
+        telemetry.update();
+        x.reset();
+        while(x.milliseconds() < 500) {
+            r.drive(0.2,0,0);
+        }
+        r.stopDrive();
+
+        r.AEncDrive(-72,6,dPower, 3000);
 
         r.stop();
 

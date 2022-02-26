@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.checkerframework.checker.index.qual.LTEqLengthOf;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.vision.SimpleVisionYCbCr;
@@ -21,7 +22,7 @@ import java.util.Objects;
 public class CompBotW3 {
     Telemetry t;
 
-    public final static double distanceK = 384.5/(100*Math.PI)*25.4, corrCoeff = 0.05, dervCoeff = 0, intCoeff = 0;
+    public final static double distanceK = 384.5/(100*Math.PI)*25.4, corrCoeff = 0.03, dervCoeff = 0.02, intCoeff = 1;
 
     public final Scalar[] blueColor = {new Scalar(0,101,140,0), new Scalar(255,125,175,255)};
     public final Scalar[] redColor = {new Scalar(0,172,98,0), new Scalar(255,196,116,255)};
@@ -62,6 +63,10 @@ public class CompBotW3 {
         imu = new RevIMU(hardwareMap,"imu");
         imu.init(parameters);
     }
+    public void init(HardwareMap h, Telemetry t) {
+        init(h);
+        this.t = t;
+    }
     public void init(HardwareMap h, boolean cameraInit, Telemetry telemetry, String color) {
         t = telemetry;
         if(cameraInit) {
@@ -93,6 +98,17 @@ public class CompBotW3 {
         fr.setPower(0);
         bl.setPower(0);
         br.setPower(0);
+    }
+
+    public void drive(double x, double y, double turn) {
+        x=-x;
+        fl.setPower(MathUtils.clamp(y+x+turn ,-1,1));
+        fr.setPower(MathUtils.clamp(-(y-x-turn),-1,1));
+        bl.setPower(MathUtils.clamp(y-x+turn,-1,1));
+        br.setPower(MathUtils.clamp(-(y+x-turn),-1,1));
+    }
+    public void stopDrive() {
+        drive(0,0,0);
     }
 
     public void AEncDrive(double dForward, double dStrafe, double s, long time) { // d = distance, s = speed
@@ -141,6 +157,7 @@ public class CompBotW3 {
         s = Math.abs(s);
         double magDist = Math.sqrt(Math.pow(dForward,2)+Math.pow(dStrafe,2));
         double sForward = s*dForward/magDist, sStrafe = s*dStrafe/magDist;
+        int[] origPositions = {fl.getCurrentPosition(), fr.getCurrentPosition(), bl.getCurrentPosition(), br.getCurrentPosition()};
         // Set the target positions of each motor
         fl.setTargetPosition(fl.getCurrentPosition() + (int) -(distanceK*(dForward+dStrafe))); // distanceK is a conversion factor to convert linear distance to motor clicks;
         fr.setTargetPosition(fr.getCurrentPosition() + (int) (distanceK*(dForward-dStrafe))); // The distance each wheel needs to travel is just the sum of the
@@ -151,22 +168,30 @@ public class CompBotW3 {
         double pastError = 0, intError = 0;
         ElapsedTime e = new ElapsedTime();
         ElapsedTime total = new ElapsedTime();
-        while((fl.isBusy() || fr.isBusy() || bl.isBusy() || br.isBusy()) && total.milliseconds() < time) {
+        while((fl.isBusy() && fr.isBusy() && bl.isBusy() && br.isBusy()) && total.milliseconds() < time) {
             double elapsedTime = e.milliseconds();
             e.reset(); // Reset the timer
             double error = imu.getHeading() - initialHeading; // Calculate the deviation from the initial angle of the robot using the gyro
             double dervError = (error-pastError)/elapsedTime; // Calculate the derivative = rate of change of the error
             intError += error*elapsedTime; // Calculate the integral = sum over time of error
             double totalError = (corrCoeff*error + dervCoeff*dervError + intCoeff*intError); // Sum the errors and apply coefficients
-            if(fl.isBusy()) { fl.setPower(-((sForward + sStrafe) * MathUtils.clamp(Math.abs(3*(fl.getCurrentPosition()-fl.getTargetPosition())),0.1,1)  + totalError) ); // DCMotor.isBusy is a boolean variable signifying whether the motor has finished moving to the position
+            double diffFL = (double)(fl.getCurrentPosition()-fl.getTargetPosition())/(origPositions[0]-fl.getTargetPosition());
+            double diffFR = (double)(fr.getCurrentPosition()-fr.getTargetPosition())/(origPositions[1]-fr.getTargetPosition());
+            double diffBL = (double)(bl.getCurrentPosition()-bl.getTargetPosition())/(origPositions[2]-bl.getTargetPosition());
+            double diffBR = (double)(br.getCurrentPosition()-br.getTargetPosition())/(origPositions[3]-br.getTargetPosition());
+            if(fl.isBusy()) { fl.setPower(-((sForward + sStrafe)* Math.abs(MathUtils.clamp(1.5*diffFL,0.1,1)) + totalError)); // DCMotor.isBusy is a boolean variable signifying whether the motor has finished moving to the position
             } else { fl.setPower(MathUtils.clamp((fl.getCurrentPosition()-fl.getTargetPosition() < 0 ? -1 : 1)*totalError, -1, 1));
-            }if(fr.isBusy()) { fr.setPower((sForward - sStrafe) * MathUtils.clamp(Math.abs(3*(fl.getCurrentPosition()-fl.getTargetPosition())),0.1,1) - totalError); // This code looks complicated but it's simple
+            } if(fr.isBusy()) { fr.setPower((sForward - sStrafe)* Math.abs(MathUtils.clamp(1.5*diffFR,0.1,1)) - totalError); // This code looks complicated but it's simple
             } else { fr.setPower(MathUtils.clamp((fr.getCurrentPosition()-fr.getTargetPosition() < 0 ? -1 : 1)*-1*totalError,-1,1));
-            }if(bl.isBusy()) { bl.setPower(-((sForward - sStrafe) * MathUtils.clamp(Math.abs(3*(fl.getCurrentPosition()-fl.getTargetPosition())),0.1,1) + totalError)); // If the motor is not finished, apply the given speed + a correction based on the angle error
+            } if(bl.isBusy()) { bl.setPower(-((sForward - sStrafe)* Math.abs(MathUtils.clamp(1.5*diffBL,0.1,1)) + totalError)); // If the motor is not finished, apply the given speed + a correction based on the angle error
             } else { bl.setPower(MathUtils.clamp((bl.getCurrentPosition()-bl.getTargetPosition() < 0 ? -1 : 1)*totalError,-1,1));
-            } if(br.isBusy()) { br.setPower((sForward + sStrafe) * MathUtils.clamp(Math.abs(3*(fl.getCurrentPosition()-fl.getTargetPosition())),0.1,1) - totalError); // If the motor is finished, apply only the correction (flip flops signs because we're in RUN_TO_POSITION mode)
-            } else { br.setPower(MathUtils.clamp((br.getCurrentPosition()-br.getTargetPosition() < 0 ? -1 : 1)*-1*totalError,-1,1));
-            }
+            } if(br.isBusy()) { br.setPower((sForward + sStrafe)* Math.abs(MathUtils.clamp(1.5*diffBR,0.1,1))- totalError); // If the motor is finished, apply only the correction (flip flops signs because we're in RUN_TO_POSITION mode)
+            } else { br.setPower(MathUtils.clamp((br.getCurrentPosition()-br.getTargetPosition() < 0 ? -1 : 1)*-1*totalError,-1,1)); }
+            t.addLine(String.valueOf(error));
+            t.addLine(String.valueOf(totalError));
+            double a = Math.abs(MathUtils.clamp(2*(double)(fl.getCurrentPosition()-fl.getTargetPosition())/(origPositions[0]-fl.getTargetPosition()),0.15,1));
+            t.addLine(String.valueOf(a));
+            t.update();
             pastError = error; // Move error into pastError for next loop
         }
         if(total.milliseconds() > time && !Objects.isNull(t)) {
@@ -177,11 +202,9 @@ public class CompBotW3 {
         fr.setPower(0);
         bl.setPower(0);
         br.setPower(0);
-        useEncoders(); // Switch back to normal RUN_USING_ENCODERS velocity control mode
     }
     public void gyroTurn(double turn, double sTurn, long time) { // turn is degrees
         useEncoders();
-        imu.reset();
         double expectedHeading = imu.getHeading() + turn, error;
         while (expectedHeading > 180)  expectedHeading -= 360;
         while (expectedHeading <= -180) expectedHeading += 360;
@@ -197,7 +220,6 @@ public class CompBotW3 {
     }
     public void gyroTurnAbsolute(double turn, double sTurn, long time) { // turn is degrees
         useEncoders();
-        imu.reset();
         double expectedHeading = turn, error;
         while (expectedHeading > 180)  expectedHeading -= 360;
         while (expectedHeading <= -180) expectedHeading += 360;

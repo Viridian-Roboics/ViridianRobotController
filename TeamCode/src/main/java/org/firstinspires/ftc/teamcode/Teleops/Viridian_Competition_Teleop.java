@@ -4,15 +4,11 @@ import androidx.core.math.MathUtils;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.CompBotW1.CompBotW1Attachments;
 import org.firstinspires.ftc.teamcode.CompBotW3.CompBotW3Attachments;
-import org.firstinspires.ftc.teamcode.Disabled.CompBotV3.CompBotV3;
 
-import java.util.Dictionary;
 import java.util.Hashtable;
 
 /*
@@ -33,6 +29,7 @@ Maximum of 1RT - 1LT and 2RT - 2LT: spin
 */
 
 @TeleOp
+@Disabled
 public class Viridian_Competition_Teleop extends LinearOpMode {
     CompBotW3Attachments r = new CompBotW3Attachments();
     enum DRIVE_MODES {
@@ -46,7 +43,7 @@ public class Viridian_Competition_Teleop extends LinearOpMode {
     public void runOpMode() {
         r.init(hardwareMap);
         // Drive mode setup
-        modePowers.put(DRIVE_MODES.NUDGING,0.2);
+        modePowers.put(DRIVE_MODES.NUDGING,1.0);
         modePowers.put(DRIVE_MODES.PRECISE, 0.2);
         modePowers.put(DRIVE_MODES.CHILL, 0.4);
         modePowers.put(DRIVE_MODES.SPORT, 1.0);
@@ -156,22 +153,36 @@ public class Viridian_Competition_Teleop extends LinearOpMode {
                 y = 0;
             }
         }
-
-        if (Math.abs(turn) < 0.1 && Math.abs(x) > 0 && Math.abs(y) > 0) {
+        headingReset = false;
+         /*
+        if (Math.abs(turn) < 0.1 && (Math.abs(x) > 0.2 || Math.abs(y) > 0.2)) {
+            telemetry.addLine("In gyro");
             if(!headingReset) {
                 initialHeading = r.imu.getHeading();
                 headingReset = true;
             } else {
                 error = r.imu.getHeading() - initialHeading;
-                turn = CompBotV3.corrCoeff*error;
+                while(error > 360) {
+                    error -= 360;
+                }
+                while(error < -360) {
+                    error += 360;
+                }
+                turn = -0.05*error;
             }
         } else {
-            headingReset = false;
+
         }
+
+          */
         r.fl.setPower(MathUtils.clamp(y+x+turn ,-1,1));
         r.fr.setPower(MathUtils.clamp(-(y-x-turn),-1,1));
         r.bl.setPower(MathUtils.clamp(y-x+turn,-1,1));
         r.br.setPower(MathUtils.clamp(-(y+x-turn),-1,1));
+
+        telemetry.addData("x",x);
+        telemetry.addData("y",y);
+        telemetry.addData("turn",turn);
 
 
         // IMU Reset
@@ -183,7 +194,7 @@ public class Viridian_Competition_Teleop extends LinearOpMode {
     public void attachments(){
         // Intake, spin
         r.intake.setPower((gamepad1.a?1:0) - (gamepad1.b?1:0));
-        double spinPower = MathUtils.clamp(1.3*Math.max(gamepad1.right_trigger-gamepad1.left_trigger, gamepad2.right_trigger-gamepad2.left_trigger),-1,1);
+        double spinPower = MathUtils.clamp(Math.pow(1.2*Math.max(gamepad1.right_trigger-gamepad1.left_trigger, gamepad2.right_trigger-gamepad2.left_trigger),2),-1,1);
         r.spin0.setPower(spinPower);
         r.spin1.setPower(spinPower);
 
@@ -211,7 +222,7 @@ public class Viridian_Competition_Teleop extends LinearOpMode {
         }
 
         // Azal Servo
-        r.azalServo.setPosition(MathUtils.clamp(r.azalServo.getPosition() + 0.02*gamepad1.right_stick_y,0,1));
+        r.azalServo.setPosition(MathUtils.clamp(r.azalServo.getPosition() + 0.005*gamepad1.right_stick_y,0,1));
     }
 
 }

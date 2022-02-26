@@ -1,21 +1,16 @@
-package org.firstinspires.ftc.teamcode.Disabled;
+package org.firstinspires.ftc.teamcode.Teleops;
 
 import androidx.core.math.MathUtils;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.CompBotW1.CompBotW1Attachments;
-import org.firstinspires.ftc.teamcode.Disabled.CompBotV3.CompBotV3;
+import org.firstinspires.ftc.teamcode.CompBotW2.CompBotW2Attachments;
+import org.firstinspires.ftc.teamcode.CompBotW3.CompBotW3Attachments;
 
-@TeleOp(name="Viridian Competition Teleop old")
-@Disabled
+@TeleOp(name="Viridian Competition Teleop")
 public class Teleop2p extends OpMode {
-    CompBotW1Attachments r = new CompBotW1Attachments();
-    double initialHeading, error;
-    boolean headingReset = false;
-
+    CompBotW3Attachments r = new CompBotW3Attachments();
     double liftPower = 1;
 
     @Override
@@ -51,17 +46,6 @@ public class Teleop2p extends OpMode {
         } else {
             y = 0;
         }
-        if (Math.abs(turn) < 0.1 && Math.abs(x) > 0 && Math.abs(y) > 0) {
-            if(!headingReset) {
-                initialHeading = r.imu.getHeading();
-                headingReset = true;
-            } else {
-                error = r.imu.getHeading() - initialHeading;
-                turn = CompBotV3.corrCoeff*error;
-            }
-        } else {
-            headingReset = false;
-        }
         r.fl.setPower(MathUtils.clamp(y+x+turn ,-1,1));
         r.fr.setPower(MathUtils.clamp(-(y-x-turn),-1,1));
         r.bl.setPower(MathUtils.clamp(y-x+turn,-1,1));
@@ -83,10 +67,10 @@ public class Teleop2p extends OpMode {
             r.imu.reset();
         }
 
-        r.setBucket(gamepad1.left_bumper?.25:1);
+        r.setBucket(gamepad1.left_bumper?0:0.67);
 
         telemetry.addLine(String.valueOf(gamepad1.a));
-        telemetry.addData("BucketPos: ", r.BucketPosition());
+        telemetry.addData("BucketPos: ", r.bs);
         telemetry.addData("liftPos: ", r.getLiftPos());
         telemetry.update();
 

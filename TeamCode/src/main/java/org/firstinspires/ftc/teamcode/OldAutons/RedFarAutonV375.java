@@ -33,10 +33,10 @@ public class RedFarAutonV375 extends LinearOpMode {
 
         double heading = r.imu.getHeading();
 
-        double sqrt = Math.sqrt(Math.pow(15, 2) + Math.pow(42, 2));
-        r.AEncDrive(15,-42,15* sqrt *dPower,-43*sqrt *dPower,2500, telemetry);
+        double sqrt = Math.sqrt(Math.pow(20, 2) + Math.pow(42, 2));
+        r.AEncDrive(20,-42,20* sqrt *dPower,-42*sqrt *dPower,2500, telemetry);
 
-        r.AEncDrive(-14,0,-0.15,0,1000);
+        r.AEncDrive(-16,0,-0.15,0,1000);
 
         r.spin(2000);
 
@@ -48,7 +48,9 @@ public class RedFarAutonV375 extends LinearOpMode {
             r.drive(-0.2,0,0);
         }
 
-        r.AEncDrive(0,64,0,0.7,4500);
+        r.AEncDrive(0,64,0,0.5,5000);
+
+        r.gyroTurnAbsolute(heading,0.2,2000);
 
         r.AEncDrive(7,0,0.4,0,3500);
 
@@ -60,8 +62,8 @@ public class RedFarAutonV375 extends LinearOpMode {
         telemetry.update();
 
         // Drive to depot
-        sqrt = Math.sqrt(Math.pow(28, 2) + Math.pow(63, 2));
-        r.AEncDrive(28,-63,28/sqrt*dPower,-63/sqrt*dPower,5000);
+        sqrt = Math.sqrt(Math.pow(30, 2) + Math.pow(63, 2));
+        r.AEncDrive(30,-63,30/sqrt*dPower,-63/sqrt*dPower,5000);
 
 
 

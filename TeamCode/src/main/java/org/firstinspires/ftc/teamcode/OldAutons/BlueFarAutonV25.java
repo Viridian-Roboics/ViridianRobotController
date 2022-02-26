@@ -33,10 +33,10 @@ public class BlueFarAutonV25 extends LinearOpMode {
 
         double heading = r.imu.getHeading();
 
-        double sqrt = Math.sqrt(Math.pow(15, 2) + Math.pow(35, 2));
-        r.AEncDrive(15,35,15* sqrt *dPower,35*sqrt *dPower,2500, telemetry);
+        double sqrt = Math.sqrt(Math.pow(20, 2) + Math.pow(35, 2));
+        r.AEncDrive(20,35,20* sqrt *dPower,35*sqrt *dPower,2500, telemetry);
 
-        r.AEncDrive(-12,0,-0.15,0,1000);
+        r.AEncDrive(-16,0,-0.15,0,2000);
 
         r.spin(2000);
 
@@ -48,9 +48,12 @@ public class BlueFarAutonV25 extends LinearOpMode {
             r.drive(0.2,0,0);
         }
 
-        r.AEncDrive(0,-61,0,-0.7,4500);
+        r.AEncDrive(0,-61,0,-0.5,5000);
 
-        r.AEncDrive(13,0,0.4,0,3500);
+        r.gyroTurnAbsolute(heading,0.2,2000);
+
+        r.AEncDrive(7,0,0.4,0,3500);
+
 
         r.autonLift(pos);
 
@@ -60,8 +63,8 @@ public class BlueFarAutonV25 extends LinearOpMode {
         telemetry.update();
 
         // Drive to depot
-        sqrt = Math.sqrt(Math.pow(28, 2) + Math.pow(55.5, 2));
-        r.AEncDrive(28,55.5,28/sqrt*dPower,55.5/sqrt*dPower,5000);
+        sqrt = Math.sqrt(Math.pow(30, 2) + Math.pow(55.5, 2));
+        r.AEncDrive(30,55.5,30/sqrt*dPower,55.5/sqrt*dPower,7000);
 
 
 

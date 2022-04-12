@@ -32,6 +32,7 @@ public class Teleop_SteeringCorrectionOnly extends OpMode {
     double[] prevAngles;
 
     ElapsedTime correctionDelay = new ElapsedTime();
+    ElapsedTime accelRamp = new ElapsedTime();
 
     @Override
     public void init() {
@@ -55,13 +56,18 @@ public class Teleop_SteeringCorrectionOnly extends OpMode {
         double accelInput = gamepad1.right_trigger - 0.4*gamepad1.left_trigger;
         double steerInput = gamepad1.left_stick_x;
 
+        if(accelInput == 0.0)
+        {
+            accelRamp.reset();
+        }
+
         switch(dm) {
             case ECO_MODE:
                 accelInput *= 0.25;
                 telemetry.addLine("Eco Mode");
                 break;
             case SPORT_MODE:
-                accelInput *= 0.6;
+                accelInput *= 0.5;
                 telemetry.addLine("Sport Mode");
                 break;
             case N_MODE:
@@ -85,15 +91,30 @@ public class Teleop_SteeringCorrectionOnly extends OpMode {
 
         double lp, rp;
         double yawCorrector = angleCorrector.calculate(angles[0]);
+        double steerCorrect = 0.0f;//used to slightly adjust where the robot corrects to on steer *EXPERIMENTAL*
+        double steerCorrectInc = 0.01f;
+
+        if(gamepad1.dpad_right)
+        {
+            steerCorrect += steerCorrectInc;
+        }
+        else if(gamepad1.dpad_left)
+        {
+            steerCorrect -= steerCorrectInc;
+        }
 
         // Gyro angle correction
         if (gm == Gyro_Modes.DRIVE_STRAIGHT) {
-            lp = accelInput;
-            rp = accelInput;
+            lp = accelInput - (accelInput/(accelInput-accelRamp.milliseconds()));
+            rp = accelInput - (accelInput/(accelInput-accelRamp.milliseconds()));
+            telemetry.addData("accelRamp", accelRamp.milliseconds());
             if(Math.abs(steerInput) > 0.03) {
                 gm = Gyro_Modes.TURN;
             }
-            r.steer(yawCorrector);
+            if(accelInput != 0)
+            {
+                r.steer(yawCorrector*.75);
+            }
         } else {
             angleCorrector.setRefVal(angles[0]);
             lp = accelInput*(1+0.3*steerInput);
@@ -105,7 +126,7 @@ public class Teleop_SteeringCorrectionOnly extends OpMode {
             } else {
                 correctionDelay.reset();
             }
-            r.steer(steerInput*(1-0.3*accelInput));
+            r.steer(steerInput*(1-0.3*accelInput)+steerCorrect);
         }
 
         r.left.setPower(lp);
@@ -120,6 +141,7 @@ public class Teleop_SteeringCorrectionOnly extends OpMode {
         telemetry.addData("Angles:", Arrays.toString(angles));
         telemetry.addData("dA: ",Arrays.toString(dA));
         telemetry.addData("yawCorrector:",yawCorrector);
+        telemetry.addData("Steer Correct", steerCorrect);
         telemetry.addLine(String.valueOf(powerCut));
 
         telemetry.update();
